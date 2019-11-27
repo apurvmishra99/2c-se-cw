@@ -1,6 +1,6 @@
 JFLAGS = -g
 JAVAC = javac
-CLASSPATH = bin:testbin:lib/junit-platform-console-standalone-1.5.2.jar
+CLASSPATH = bin:testbin:lib/junit.jar
 .SUFFIXES: .java .class
 SRCDIR = src/uk/ac/ed/bikerental
 BINDIR = bin/uk/ac/ed/bikerental
