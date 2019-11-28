@@ -7,13 +7,22 @@ import java.util.Hashtable;
 import java.util.Objects;
 
 public class Quote {
-    private String id;
-    private double price;
-    private double deposit;
-    private DateRange dates;
-    private Location loc;
-    private ArrayList<Bike> bikeList;
+    protected String id;
+    protected double price;
+    protected double deposit;
+    protected DateRange dates;
+    protected Location loc;
+    protected ArrayList<Bike> bikeList;
 
+    // Shallow copy constructor
+    public Quote(Quote q) {
+        this.id = q.id;
+        this.price = q.price;
+        this.deposit = q.deposit;
+        this.dates = q.dates;
+        this.loc = q.loc;
+        this.bikeList = q.bikeList;
+    }
 
     public Quote(String id, double price, double deposit, DateRange dates, Location loc, ArrayList<Bike> bikeList) {
         this.id = id;
@@ -28,78 +37,24 @@ public class Quote {
         return this.id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public double getPrice() {
         return this.price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public double getDeposit() {
         return this.deposit;
     }
 
-    public void setDeposit(double deposit) {
-        this.deposit = deposit;
-    }
-
     public DateRange getDates() {
         return this.dates;
-    }
-
-    public void setDates(DateRange dates) {
-        this.dates = dates;
     }
 
     public Location getLoc() {
         return this.loc;
     }
 
-    public void setLoc(Location loc) {
-        this.loc = loc;
-    }
-
     public ArrayList<Bike> getBikeList() {
         return this.bikeList;
-    }
-
-    public void setBikeList(ArrayList<Bike> bikeList) {
-        this.bikeList = bikeList;
-    }
-
-    public Quote id(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public Quote price(double price) {
-        this.price = price;
-        return this;
-    }
-
-    public Quote deposit(double deposit) {
-        this.deposit = deposit;
-        return this;
-    }
-
-    public Quote dates(DateRange dates) {
-        this.dates = dates;
-        return this;
-    }
-
-    public Quote loc(Location loc) {
-        this.loc = loc;
-        return this;
-    }
-
-    public Quote bikeList(ArrayList<Bike> bikeList) {
-        this.bikeList = bikeList;
-        return this;
     }
 
     @Override
