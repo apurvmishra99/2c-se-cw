@@ -58,8 +58,8 @@ public class TestsPricingPolicy {
         BigDecimal bgg = tpp.calculatePrice(arr, dateRange2);
         BigDecimal dis = new BigDecimal(0.05);
         BigDecimal one = new BigDecimal(1.0);
-        BigDecimal rent1 = b1.type.rentalPrice;
-        BigDecimal rent2 = b2.type.rentalPrice;
+        BigDecimal rent1 = b1.getType().rentalPrice;
+        BigDecimal rent2 = b2.getType().rentalPrice;
         BigDecimal range = new BigDecimal(dateRange2.toDays());
         BigDecimal sum1 = rent1.multiply(range);
         BigDecimal sum2 = rent2.multiply(range);

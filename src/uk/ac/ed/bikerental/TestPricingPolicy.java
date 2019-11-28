@@ -10,8 +10,8 @@ class TestPricingPolicy implements PricingPolicy{
     public BigDecimal calculatePrice(Collection<Bike> bikes, DateRange duration){
         BigDecimal tot = new BigDecimal(0.0);
         for(Bike b : bikes){
-            BigDecimal d =  b.type.rentalPrice;
-            BigDecimal range  = new BigDecimal ( duration.toDays());
+            BigDecimal d = b.getType().rentalPrice;
+            BigDecimal range = new BigDecimal ( duration.toDays());
             BigDecimal sum = d.multiply(range);
             tot = tot.add(sum);
         }
