@@ -129,6 +129,6 @@ public class Bike {
 
     public BikeType getType() {
         // TODO: Implement Bike.getType
-        return this.type;;
+        return this.type;
     }
 }
