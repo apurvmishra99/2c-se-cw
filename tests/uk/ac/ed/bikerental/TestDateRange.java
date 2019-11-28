@@ -45,12 +45,14 @@ class TestDateRange {
         assertEquals(1099, this.dateRange3.toDays());
     }
 
+    // Test overlaps() -- expect True
     @Test
     void overlaps_true() {
         boolean d1d2 = dateRange1.overlaps(dateRange2);
         assertTrue(d1d2);
     }
 
+    // Test overlap() is symmetric
     @Test
     void overlaps_symmtric() {
         boolean d1d2 = dateRange1.overlaps(dateRange2);
@@ -58,6 +60,7 @@ class TestDateRange {
         assertEquals(d1d2, d2d1);
     }
 
+    // Test overlap() -- expect False
     @Test
     void overlaps_false() {
         boolean d1d3 = dateRange1.overlaps(dateRange3);
