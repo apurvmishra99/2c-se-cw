@@ -5,12 +5,12 @@ import java.util.Collection;
 class TestPricingPolicy implements PricingPolicy{
 
     public void setDailyRentalPrice(BikeType bikeType, BigDecimal dailyPrice){
-        bikeType.rentalPrice = dailyPrice;
+        // bikeType.replacementPrice = dailyPrice;
     }
     public BigDecimal calculatePrice(Collection<Bike> bikes, DateRange duration){
         BigDecimal tot = new BigDecimal(0.0);
         for(Bike b : bikes){
-            BigDecimal d = b.getType().rentalPrice;
+            BigDecimal d = b.getType().getReplacementValue();
             BigDecimal range = new BigDecimal ( duration.toDays());
             BigDecimal sum = d.multiply(range);
             tot = tot.add(sum);
