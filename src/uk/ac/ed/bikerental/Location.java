@@ -16,13 +16,13 @@ public class Location {
     /**
      * Location constructor.
      *
-     * @param  postcode Postcode
+     * @param  postcode Postcode (case insensitive)
      * @param  address  Address
      * @return          Location object.
      */
     public Location(String postcode, String address) {
         assert postcode.length() >= 6;
-        this.postcode = postcode;
+        this.postcode = postcode.toUpperCase();
         this.address = address;
     }
 
