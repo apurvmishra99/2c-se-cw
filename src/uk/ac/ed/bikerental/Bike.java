@@ -1,114 +1,75 @@
 package uk.ac.ed.bikerental;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Hashtable;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class Bike {
+
     private BikeType type;
-    private String id;
+    private UUID id;
     private Shop owner;
-    private Hashtable<LocalDate, Boolean> availability;
+    private Set<DateRange> bookingDates;
     private BikeStatus status;
     private String notes;
 
-    public Bike(BikeType type, String id, Shop owner, Hashtable<LocalDate,Boolean> availability, BikeStatus status, String notes) {
+    public Bike(BikeType type, Shop owner) {
+        this(type, owner, "");
+    }
+
+    public Bike(BikeType type, Shop owner, String notes) {
         this.type = type;
-        this.id = id;
+        this.id = UUID.randomUUID();
         this.owner = owner;
-        this.availability = availability;
-        this.status = status;
+        this.bookingDates = new HashSet<DateRange>();
+        this.status = BikeStatus.AVAIALBLE;
         this.notes = notes;
     }
-    public void setType(BikeType type) {
-        this.type = type;
+
+    public BikeType getType() {
+        return this.type;
     }
 
-    public String getId() {
+    public UUID getId() {
         return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public Shop getOwner() {
         return this.owner;
     }
 
-    public void setOwner(Shop owner) {
-        this.owner = owner;
-    }
-
-    public Hashtable<LocalDate,Boolean> getAvailability() {
-        return this.availability;
-    }
-
-    public void setAvailability(Hashtable<LocalDate,Boolean> availability) {
-        this.availability = availability;
+    public Set<DateRange> getUnavailabile() {
+        return this.bookingDates;
     }
 
     public BikeStatus getStatus() {
         return this.status;
     }
 
-    public void setStatus(BikeStatus status) {
-        this.status = status;
-    }
-
     public String getNotes() {
         return this.notes;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void updateBikeStatus(BikeStatus s) {
+        this.status = s;
     }
 
-    public Bike type(BikeType type) {
-        this.type = type;
-        return this;
-    }
-
-    public Bike id(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public Bike owner(Shop owner) {
-        this.owner = owner;
-        return this;
-    }
-
-    public Bike availability(Hashtable<LocalDate,Boolean> availability) {
-        this.availability = availability;
-        return this;
-    }
-
-    public Bike status(BikeStatus status) {
-        this.status = status;
-        return this;
-    }
-
-    public Bike notes(String notes) {
-        this.notes = notes;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
+    public boolean book(DateRange dateRange) {
+        if (isAvailable(dateRange)) {
+            bookingDates.add(dateRange);
             return true;
-        if (!(o instanceof Bike)) {
-            return false;
         }
-        Bike bike = (Bike) o;
-        return Objects.equals(type, bike.type) && Objects.equals(id, bike.id) && Objects.equals(owner, bike.owner) && Objects.equals(availability, bike.availability) && Objects.equals(status, bike.status) && Objects.equals(notes, bike.notes);
+        return false;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, id, owner, availability, status, notes);
+    public boolean isAvailable(DateRange dateRange) {
+        for (DateRange d: bookingDates) {
+            if (dateRange.overlaps(d)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -117,11 +78,11 @@ public class Bike {
             " type='" + getType() + "'" +
             ", id='" + getId() + "'" +
             ", owner='" + getOwner() + "'" +
-            ", availability='" + getAvailability() + "'" +
             ", status='" + getStatus() + "'" +
             ", notes='" + getNotes() + "'" +
             "}";
     }
+<<<<<<< HEAD
 
     public Bike(BikeType bt) {
         this.type = bt;
@@ -131,4 +92,6 @@ public class Bike {
         // TODO: Implement Bike.getType
         return this.type;
     }
+=======
+>>>>>>> 897d7a69a9161ec79698593d5e2b3ce7f5c9c0ed
 }

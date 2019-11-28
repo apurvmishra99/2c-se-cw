@@ -23,9 +23,9 @@ public class TestsPricingPolicy {
     @BeforeEach
     void setUp() throws Exception {
         tpp = new TestPricingPolicy();
-        bt1 = new BikeType("Mountain");
+        bt1 = new BikeType("Mountain", new BigDecimal(75));
         b1 = new Bike(bt1);
-        bt2 = new BikeType("Commercial");
+        bt2 = new BikeType("Commercial", new BigDecimal(85));
         b2 = new Bike(bt2);
         this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 8), LocalDate.of(2019, 1, 10));
         this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 7), LocalDate.of(2019, 1, 10));
@@ -39,7 +39,7 @@ public class TestsPricingPolicy {
     @Test
     void testsetRentalPrice() {
         tpp.setDailyRentalPrice(bt1, new BigDecimal(120.0));
-        assertEquals(bt1.rentalPrice, new BigDecimal(120.0));
+        assertEquals(bt1.getReplacementValue(), new BigDecimal(120.0));
     }
 
     @Test
@@ -58,8 +58,8 @@ public class TestsPricingPolicy {
         BigDecimal bgg = tpp.calculatePrice(arr, dateRange2);
         BigDecimal dis = new BigDecimal(0.05);
         BigDecimal one = new BigDecimal(1.0);
-        BigDecimal rent1 = b1.type.rentalPrice;
-        BigDecimal rent2 = b2.type.rentalPrice;
+        BigDecimal rent1 = b1.getType().getReplacementValue();
+        BigDecimal rent2 = b2.getType().getReplacementValue();
         BigDecimal range = new BigDecimal(dateRange2.toDays());
         BigDecimal sum1 = rent1.multiply(range);
         BigDecimal sum2 = rent2.multiply(range);
@@ -68,5 +68,4 @@ public class TestsPricingPolicy {
         BigDecimal total = sum.multiply(totdiscount);
         assertEquals(total, bgg);
     }
-    // TODO: Write tests for pricing policies
 }
