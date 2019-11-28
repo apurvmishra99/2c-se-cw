@@ -21,28 +21,46 @@ class TestDateRange {
                 LocalDate.of(2018, 1, 10));
     }
 
-    // Sample JUnit tests checking toYears works
+    // Test toYears()
     @Test
-    void testToYears1() {
+    void toYears_date1() {
         assertEquals(0, this.dateRange1.toYears());
     }
 
+    // Test toYears()
     @Test
-    void testToYears3() {
+    void toYears_date3() {
         assertEquals(3, this.dateRange3.toYears());
     }
 
+    // Test toDays()
     @Test
-    void testOverlapsTrue() {
-        // TODO: check we can see when two date ranges overlap
-        fail();
+    void toDays_date1() {
+        assertEquals(3, this.dateRange1.toDays());
+    }
+
+    // Test toDays()
+    @Test
+    void toDays_date3() {
+        assertEquals(1099, this.dateRange3.toDays());
     }
 
     @Test
-    void testOverlapsFalse() {
-        // TODO: check we can see when two date ranges  don't overlap
-        fail();
+    void overlaps_true() {
+        boolean d1d2 = dateRange1.overlaps(dateRange2);
+        assertTrue(d1d2);
     }
 
-    // TODO: put some of your own unit tests here
+    @Test
+    void overlaps_symmtric() {
+        boolean d1d2 = dateRange1.overlaps(dateRange2);
+        boolean d2d1 = dateRange2.overlaps(dateRange1);
+        assertEquals(d1d2, d2d1);
+    }
+
+    @Test
+    void overlaps_false() {
+        boolean d1d3 = dateRange1.overlaps(dateRange3);
+        assertFalse(d1d3);
+    }
 }
