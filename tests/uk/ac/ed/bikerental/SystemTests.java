@@ -29,6 +29,5 @@ public class SystemTests {
     @Test
     void myFirstTest() {
         // JUnit tests look like this
-        assertEquals("The moon", "cheese"); // Should fail
     }
 }
