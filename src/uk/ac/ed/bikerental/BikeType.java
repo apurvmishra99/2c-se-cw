@@ -45,6 +45,6 @@ public class BikeType {
         if (getClass() != obj.getClass())
             return false;
         BikeType other = (BikeType) obj;
-        return Objects.equals(name, other.getName());
+        return Objects.equals(this.name, other.getName());
     }
 }

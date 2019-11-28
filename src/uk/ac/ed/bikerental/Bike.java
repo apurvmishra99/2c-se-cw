@@ -6,12 +6,17 @@ import java.util.Hashtable;
 import java.util.Objects;
 
 public class Bike {
+
     private BikeType type;
     private String id;
     private Shop owner;
     private Hashtable<LocalDate, Boolean> availability;
     private BikeStatus status;
     private String notes;
+
+
+    public Bike() {
+    }
 
     public Bike(BikeType type, String id, Shop owner, Hashtable<LocalDate,Boolean> availability, BikeStatus status, String notes) {
         this.type = type;
@@ -21,6 +26,11 @@ public class Bike {
         this.status = status;
         this.notes = notes;
     }
+
+    public BikeType getType() {
+        return this.type;
+    }
+
     public void setType(BikeType type) {
         this.type = type;
     }
@@ -121,13 +131,5 @@ public class Bike {
             ", status='" + getStatus() + "'" +
             ", notes='" + getNotes() + "'" +
             "}";
-    }
-
-    public Bike(BikeType bt) {
-        this.type = bt;
-    }
-
-    public BikeType getType() {
-        return this.type;
     }
 }
