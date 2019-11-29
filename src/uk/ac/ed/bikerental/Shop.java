@@ -2,6 +2,9 @@ package uk.ac.ed.bikerental;
 
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -12,14 +15,18 @@ public class Shop {
     private String hours;
     private Set<Shop> partners;
     private Set<Bike> bikes;
+    private BigDecimal depositRate;
+    private ValuationPolicy valuationPolicy;
 
 
-    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes) {
+    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate, ValuationPolicy valuationPolicy) {
         this.id = UUID.randomUUID();
         this.address = address;
         this.hours = hours;
         this.partners = partners;
         this.bikes = bikes;
+        this.depositRate = depositRate;
+        this.valuationPolicy = valuationPolicy;
     }
 
     private int countBikesByType(BikeType bt) {
@@ -40,14 +47,37 @@ public class Shop {
         this.partners.add(s);
     }
 
-    public boolean hasBikes(DateRange dates, Map<BikeType, Integer> bikes) {
+    public BigDecimal
+
+    // public boolean hasBikes(DateRange dates, Map<BikeType, Integer> bikes) {
+    //     assertTrue(dates.isInFuture());
+    //     for(BikeType bt : bikes.keySet()) {
+    //         if (countBikesByType(bt) < bikes.get(bt)) {
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
+
+    public Collection<Bike> getBikes(DateRange dates, Map<BikeType, Integer> bikes) {
         assertTrue(dates.isInFuture());
-        for(BikeType bt : bikes.keySet()) {
-            if (countBikesByType(bt) < bikes.get(bt)) {
-                return false;
+        Collection<Bike> ret = new HashSet<Bike>();
+        for(Bike b : this.bikes) {
+            if (b.isAvailable(dates)) {
+                BikeType bt = b.getType();
+                int needed = bikes.getOrDefault(bt, 0);
+                if (needed > 0) {
+                    ret.add(b);
+                    bikes.put(bt, needed - 1);
+                    bikes.remove(bt, 0);
+                }
             }
         }
-        return true;
+        if (bikes.isEmpty()) {
+            return ret;
+        } else {
+            return null;
+        }
     }
 
     public UUID getId() {

@@ -7,6 +7,7 @@ public class BikeType {
     private String name;
     private BigDecimal replacementValue;
     private BigDecimal depreciationRate;
+    private BigDecimal dailyPrice;
 
     public BikeType(String s, BigDecimal replacementValue, BigDecimal depreciationRate) {
         this.name = s;
@@ -24,6 +25,14 @@ public class BikeType {
 
     public BigDecimal getDepreciationRate() {
         return this.replacementValue;
+    }
+
+    public BigDecimal getDailyPrice() {
+        return this.dailyPrice;
+    }
+
+    public void setDailyPrice(BigDecimal dp) {
+        this.dailyPrice = dp;
     }
 
     /**

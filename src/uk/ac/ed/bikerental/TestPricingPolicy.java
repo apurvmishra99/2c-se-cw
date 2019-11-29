@@ -2,11 +2,16 @@ package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-class TestPricingPolicy implements PricingPolicy{
+
+
+class TestPricingPolicy implements PricingPolicy {
+
+    // public TestPricingPolicy() {};
 
     public void setDailyRentalPrice(BikeType bikeType, BigDecimal dailyPrice){
-        // bikeType.replacementPrice = dailyPrice;
+        bikeType.setDailyPrice(dailyPrice);
     }
+
     public BigDecimal calculatePrice(Collection<Bike> bikes, DateRange duration){
         BigDecimal tot = new BigDecimal(0.0);
         for(Bike b : bikes){

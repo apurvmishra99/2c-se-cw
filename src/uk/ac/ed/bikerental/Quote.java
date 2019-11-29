@@ -1,15 +1,14 @@
 package uk.ac.ed.bikerental;
 
-import java.util.ArrayList;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Hashtable;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Quote {
-    protected String id;
-    protected double price;
-    protected double deposit;
+    protected UUID id;
+    protected BigDecimal price;
+    protected BigDecimal deposit;
     protected DateRange dates;
     protected Location loc;
     protected ArrayList<Bike> bikeList;
@@ -24,8 +23,8 @@ public class Quote {
         this.bikeList = q.bikeList;
     }
 
-    public Quote(String id, double price, double deposit, DateRange dates, Location loc, ArrayList<Bike> bikeList) {
-        this.id = id;
+    public Quote(BigDecimal price, BigDecimal deposit, DateRange dates, Location loc, ArrayList<Bike> bikeList) {
+        this.id = UUID.randomUUID();
         this.price = price;
         this.deposit = deposit;
         this.dates = dates;
@@ -33,15 +32,15 @@ public class Quote {
         this.bikeList = bikeList;
     }
 
-    public String getId() {
+    public UUID getId() {
         return this.id;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return this.price;
     }
 
-    public double getDeposit() {
+    public BigDecimal getDeposit() {
         return this.deposit;
     }
 
