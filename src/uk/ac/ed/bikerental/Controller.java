@@ -23,11 +23,12 @@ public class Controller {
     public Set<Quote> getQuotes(Map<BikeType, Integer> bikes, DateRange dates, Location location) {
         Set<Quote> ret = new HashSet<Quote>();
         for (Shop s : this.shops) {
-            Collection<Bike> bl = s.getBikes(dates, bikes);
-            if(bl != null) {
-                BigDecimal p = (new TestPricingPolicy()).calculatePrice(bl, dates);
-                s.generatePrice(bl);
-                Quote q = new Quote(p, deposit, dates, location, bikes);
+            Collection<Bike> bikeList = s.getBikes(dates, bikes);
+            if(bikeList != null) {
+                BigDecimal p = (new TestPricingPolicy()).calculatePrice(bikeList, dates);
+                BigDecimal d = s.generateDeposit(bikeList, dates.getStart());
+                Quote q = new Quote(p, d, dates, location, bikeList);
+                ret.add(q);
             }
         }
         return ret;

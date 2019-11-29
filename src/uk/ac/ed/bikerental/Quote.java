@@ -1,8 +1,7 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Collection;
 import java.util.UUID;
 
 public class Quote {
@@ -11,7 +10,7 @@ public class Quote {
     protected BigDecimal deposit;
     protected DateRange dates;
     protected Location loc;
-    protected ArrayList<Bike> bikeList;
+    protected Collection<Bike> bikeList;
 
     // Shallow copy constructor
     public Quote(Quote q) {
@@ -23,7 +22,7 @@ public class Quote {
         this.bikeList = q.bikeList;
     }
 
-    public Quote(BigDecimal price, BigDecimal deposit, DateRange dates, Location loc, ArrayList<Bike> bikeList) {
+    public Quote(BigDecimal price, BigDecimal deposit, DateRange dates, Location loc, Collection<Bike> bikeList) {
         this.id = UUID.randomUUID();
         this.price = price;
         this.deposit = deposit;
@@ -52,24 +51,8 @@ public class Quote {
         return this.loc;
     }
 
-    public ArrayList<Bike> getBikeList() {
+    public Collection<Bike> getBikeList() {
         return this.bikeList;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Quote)) {
-            return false;
-        }
-        Quote quote = (Quote) o;
-        return Objects.equals(id, quote.id) && price == quote.price && deposit == quote.deposit && Objects.equals(dates, quote.dates) && Objects.equals(loc, quote.loc) && Objects.equals(bikeList, quote.bikeList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, price, deposit, dates, loc, bikeList);
     }
 
     @Override
@@ -83,6 +66,4 @@ public class Quote {
             ", bikeList='" + getBikeList() + "'" +
             "}";
     }
-
-
 }

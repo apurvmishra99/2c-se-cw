@@ -3,6 +3,7 @@ package uk.ac.ed.bikerental;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -47,7 +48,13 @@ public class Shop {
         this.partners.add(s);
     }
 
-    public BigDecimal
+    public BigDecimal generateDeposit(Collection<Bike> bikeList, LocalDate startDate) {
+        BigDecimal ret = new BigDecimal(0);
+        for (Bike b : bikeList) {
+            ret.add(valuationPolicy.calculateValue(b,startDate));
+        }
+        return ret;
+    }
 
     // public boolean hasBikes(DateRange dates, Map<BikeType, Integer> bikes) {
     //     assertTrue(dates.isInFuture());
