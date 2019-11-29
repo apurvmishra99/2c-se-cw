@@ -25,9 +25,9 @@ public class Controller {
         for (Shop s : this.shops) {
             Collection<Bike> bikeList = s.getBikes(dates, bikes);
             if(bikeList != null) {
-                BigDecimal p = (new TestPricingPolicy()).calculatePrice(bikeList, dates);
-                BigDecimal d = s.generateDeposit(bikeList, dates.getStart());
-                Quote q = new Quote(p, d, dates, location, s, bikeList);
+                BigDecimal price = s.getPricingPolicy().calculatePrice(bikeList, dates);
+                BigDecimal deposit = s.generateDeposit(bikeList, dates.getStart());
+                Quote q = new Quote(price, deposit, dates, location, s, bikeList);
                 ret.add(q);
             }
         }
@@ -59,26 +59,36 @@ public class Controller {
         }
     }
 
-    public void addBike(BikeType bikeType) {
-        this.addBike(bikeType, LocalDate.now(), "");
+    public Bike addBike(BikeType bikeType) {
+        return this.addBike(bikeType, LocalDate.now(), "");
     }
 
-    public void addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
+    public Bike addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
+        assert (manifactureDate.compareTo(LocalDate.now()) < 0);
         if (this.loggedInShop == null) {
             throw new Error("User not logged in");
         }
-        this.loggedInShop.addBike(bikeType, manifactureDate, notes);;
+        return this.loggedInShop.addBike(bikeType, manifactureDate, notes);
     }
 
-    public void addBikeType(String s, BigDecimal replacementValue, BigDecimal depreciationRate) {
+    public BikeType addBikeType(String s, BigDecimal replacementValue, BigDecimal depreciationRate) {
         BikeType newBikeType = new BikeType(s, replacementValue, depreciationRate);
         if (!this.bikeTypes.add(newBikeType)) {
-            throw new Error("BikeType already present");
+            throw new Error("BikeType already registered");
         }
+        return newBikeType;
     }
 
-    public void addShop(Shop s) {
-        this.shops.add(s);
+    public Shop addShop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate) {
+        Shop shop = new Shop(address, hours, partners, bikes, depositRate);
+        this.shops.add(shop);
+        return shop;
+    }
+
+    public Shop addShop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate, ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
+        Shop shop = new Shop(address, hours, partners, bikes, depositRate, valuationPolicy, pricingPolicy);
+        this.shops.add(shop);
+        return shop;
     }
 
     public CurrentAction getAction() {

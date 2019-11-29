@@ -1,7 +1,5 @@
 package uk.ac.ed.bikerental;
 
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -18,9 +16,14 @@ public class Shop {
     private Set<Bike> bikes;
     private BigDecimal depositRate;
     private ValuationPolicy valuationPolicy;
+    private PricingPolicy pricingPolicy;
 
 
-    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate, ValuationPolicy valuationPolicy) {
+    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate) {
+        this(address, hours, partners, bikes, depositRate, new DefaultValuationPolicy(), new DefaultPricingPolicy());
+    }
+
+    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate, ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
         this.id = UUID.randomUUID();
         this.address = address;
         this.hours = hours;
@@ -28,17 +31,8 @@ public class Shop {
         this.bikes = bikes;
         this.depositRate = depositRate;
         this.valuationPolicy = valuationPolicy;
+        this.pricingPolicy = pricingPolicy;
     }
-
-    // private int countBikesByType(BikeType bt) {
-    //     int ret = 0;
-    //     for (Bike b : bikes) {
-    //         if (b.getType() == bt) {
-    //             ret += 1;
-    //         }
-    //     }
-    //     return ret;
-    // }
 
     public boolean auth(String s) {
         return true;
@@ -48,12 +42,14 @@ public class Shop {
         this.partners.add(s);
     }
 
-    public void addBike(BikeType bikeType) {
-        this.addBike(bikeType, LocalDate.now(), "");
+    public Bike addBike(BikeType bikeType) {
+        return this.addBike(bikeType, LocalDate.now(), "");
     }
 
-    public void addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
-        this.bikes.add(new Bike(bikeType, this, manifactureDate, notes));
+    public Bike addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
+        Bike bike = new Bike(bikeType, this, manifactureDate, notes);
+        this.bikes.add(bike);
+        return bike;
     }
 
     public BigDecimal generateDeposit(Collection<Bike> bikeList, LocalDate startDate) {
@@ -64,18 +60,8 @@ public class Shop {
         return ret.multiply(this.depositRate);
     }
 
-    // public boolean hasBikes(DateRange dates, Map<BikeType, Integer> bikes) {
-    //     assertTrue(dates.isInFuture());
-    //     for(BikeType bt : bikes.keySet()) {
-    //         if (countBikesByType(bt) < bikes.get(bt)) {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
-
     public Collection<Bike> getBikes(DateRange dates, Map<BikeType, Integer> bikes) {
-        assertTrue(dates.isInFuture());
+        assert (dates.isInFuture());
         Collection<Bike> ret = new HashSet<Bike>();
         for(Bike b : this.bikes) {
             if (b.isAvailable(dates)) {
@@ -117,6 +103,10 @@ public class Shop {
 
     public Set<Bike> getBikes() {
         return this.bikes;
+    }
+
+    public PricingPolicy getPricingPolicy() {
+        return this.pricingPolicy;
     }
 
     @Override

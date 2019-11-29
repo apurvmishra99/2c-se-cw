@@ -1,39 +1,32 @@
 package uk.ac.ed.bikerental;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-import javax.swing.text.html.HTMLDocument.Iterator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SystemTest1 {
-    // You can add attributes here
-    
     Set<Shop> providers = new HashSet<>();
-    Customer cr1 = new Customer("ABCD", "XYZ");
-    Customer cr2 = new Customer("1234", "890");
+    // Customer cr1 = new Customer("ABCD", "XYZ");
+    // Customer cr2 = new Customer("1234", "890");
 
-    
-//    BIKE RENTAL SHOPS
-    Shop brs1;
-    Shop brs2;
-    Shop brs3;
-    Shop brs4;
-    Shop brs5;
-    
-//    BIKES
+
+    // BIKE RENTAL SHOPS
+    Shop s1;
+    Shop s2;
+    Shop s3;
+    Shop s4;
+    Shop s5;
+
+    // BIKES
     Bike b1;
     Bike b2;
     Bike b3;
@@ -42,74 +35,129 @@ public class SystemTest1 {
     Bike b6;
     Bike b7;
     Bike b8;
-    
-//    COLLECTION OF BIKES
+    Bike b9;
+    Bike b10;
+    Bike b11;
+    Bike b12;
+    Bike b13;
+
+    BikeType bikeType1;
+    BikeType bikeType2;
+    BikeType bikeType3;
+    BikeType bikeType4;
+    BikeType bikeType5;
+
+    // COLLECTION OF BIKES
     HashSet<Bike> bikes1;
     HashSet<Bike> bikes2;
     HashSet<Bike> bikes3;
     HashSet<Bike> bikes4;
     HashSet<Bike> bikes5;
-    
-    
-//    DATE RANGES DEFINITION
+
+    // DATE RANGES DEFINITION
     DateRange dateRange1;
     DateRange dateRange2;
     DateRange dateRange3;
-    
-//    RESERVATIONS
-    Booking r1;
-    Booking r2;
-    Booking r3;
-    
-    int noOfervations;
-    
-//    QUOTES RECEIVED
-    Set<Quote> actualQuotes;
-    
-    Controller ms;
-    Location l_customer;// location of the customer
-    HashSet<String> bikesReq;//   bikes requested
-    
-    Booking booking;// Booking a quote
-    
+
+    LocalDate datePast;
+    LocalDate dateNow;
+    LocalDate dateFuture;
+
+    Location loc1;
+    Location loc2;
+    Location loc3;
+    Location loc4;
+    Location loc5;
+
+    // BOOKINGS
+    Booking l1;
+    Booking l2;
+    Booking l3;
+
+    // EXPECTED QUOTES
+    Set<Quote> expectedQuotes;
+
+    Controller controller;
+    Location loc;
+    HashMap<BikeType, Integer> bikesRequested;
+
     @BeforeEach
     void setUp() throws Exception {
-        // Setup mock delivery service before each tests
-        
-        
-//        DATE RANGES
+        // Mock delivery
+        DeliveryServiceFactory.setupMockDeliveryService();
+
+        // Dates
         dateRange1 = new DateRange(LocalDate.of(2019, 1, 7), LocalDate.of(2019, 1, 10));
         dateRange2 = new DateRange(LocalDate.of(2019, 1, 5), LocalDate.of(2019, 1, 23));
         dateRange3 = new DateRange(LocalDate.of(2015, 1, 7), LocalDate.of(2018, 1, 10));
-        
-        DeliveryServiceFactory.setupMockDeliveryService();
-        
-//        RESERVATIONS      
-        r1 = new Reservation(cr1, dateRange1);
-        r2 = new Reservation(cr2, dateRange2);
-        r3 = new Reservation(cr2, dateRange3);
-        
-        noOfReservations = 3;
-        
-        HashSet res1 = new HashSet();
-        res1.add(r1);
-        res1.add(r2);
-        
-        HashSet res2 = new HashSet();
-        res2.add(r3);
-        
-//        BIKES
-        b1 = new Bike(new BigDecimal(900), new BigDecimal(20), BikeStatus.AVAILABLE, new BigDecimal(20), new BigDecimal(10), LocalDate.of(2012, 1, 1), "Mountain Bike", null);
-        b2 = new Bike(new BigDecimal(900), new BigDecimal(15), BikeStatus.AVAILABLE, new BigDecimal(20), new BigDecimal(10), LocalDate.of(2012, 1, 1), "Road Bike", null);
-        
-        b3 = new Bike(new BigDecimal(150), new BigDecimal(40), BikeStatus.AVAILABLE, new BigDecimal(10), new BigDecimal(10), LocalDate.of(2017, 1, 1), "Hybrid Bike", null);
-        b4 = new Bike(new BigDecimal(120), new BigDecimal(15), BikeStatus.AVAILABLE, new BigDecimal(9), new BigDecimal(10), LocalDate.of(2015, 1, 1), "Road Bike", null);
 
-        b5 = new Bike(new BigDecimal(150), new BigDecimal(20), BikeStatus.RESERVED, new BigDecimal(11), new BigDecimal(12), LocalDate.of(2017, 1, 1), "Mountain Bike", res1);
-        b6 = new Bike(new BigDecimal(120), new BigDecimal(15), BikeStatus.RESERVED, new BigDecimal(9), new BigDecimal(10), LocalDate.of(2015, 1, 1), "Road Bike", res2);
+        datePast = LocalDate.of(2017, 1, 7);
+        dateNow = LocalDate.now();
+        dateFuture = LocalDate.of(2022, 5, 1);
+
+        loc1 = new Location("EH7 4EG", "38 Haddington Place");
+        loc2 = new Location("EH3 9LW", "15 Leven Terrace");
+        loc3 = new Location("CA3 1LW", "Cagliariiii");
+        loc4 = new Location("eh1 1jh", "Somewhere in Edi");
+        loc5 = new Location("eh4 5th", "30 Collegiate, Edinburgh");
+
+        controller = new Controller();
+
+        // Add bike types
+        bikeType1 = controller.addBikeType("Mountain", new BigDecimal(500), new BigDecimal(0.1));
+        bikeType2 = controller.addBikeType("Commercial", new BigDecimal(150), new BigDecimal(0.1));
+        bikeType3 = controller.addBikeType("Stunt", new BigDecimal(250), new BigDecimal(0.2));
+        bikeType4 = controller.addBikeType("BT1", new BigDecimal(20), new BigDecimal(0.5));
+        bikeType5 = controller.addBikeType("BTT", new BigDecimal(40), new BigDecimal(0.75));
+
+        // Initialise Shop2 -- owns 2xType1 + 1xType2
+        s1 = controller.addShop(loc1, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.4), new LinearDepreciationPolicy(), new TestPricingPolicy());
+        controller.login(s1, "");
+        b1 = controller.addBike(bikeType1);
+        b2 = controller.addBike(bikeType2, datePast, "We love SE");
+        b3 = controller.addBike(bikeType1);
+
+        // Initialise Shop2 -- owns 2xType2 + 1xType4
+        s2 = controller.addShop(loc2, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1), new DoubleDecliningPolicy(), new DefaultPricingPolicy());
+        controller.login(s2, "");
+        b4 = controller.addBike(bikeType2);
+        b5 = controller.addBike(bikeType4, dateNow, "We love SE");
+        b6 = controller.addBike(bikeType2);
+
+        // Initialise Shop3 -- owns 2xType1 + 1xType4
+        s3 = controller.addShop(loc3, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.3));
+        controller.login(s3, "");
+        b7 = controller.addBike(bikeType1);
+        b8 = controller.addBike(bikeType4);
+        b9 = controller.addBike(bikeType1);
+
+
+        // Initialise Shop4 -- owns 3xType1
+        s4 = controller.addShop(loc4, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.2));
+        controller.login(s4, "");
+        b10 = controller.addBike(bikeType1);
+        b11 = controller.addBike(bikeType1);
+        b12 = controller.addBike(bikeType1);
+
+        s1.addPartner(s2);
+        s2.addPartner(s1);
+        s4.addPartner(s5);
+        s5.addPartner(s4);
+
+
+        // // BIKES
+        // b0 = new Bike(type, owner, manufactureDate, notes);
+        // b1 = new Bike(new BigDecimal(900), new BigDecimal(20), BikeStatus.AVAILABLE, new BigDecimal(20), new BigDecimal(10), LocalDate.of(2012, 1, 1), "Mountain Bike", null);
+        // b2 = new Bike(new BigDecimal(900), new BigDecimal(15), BikeStatus.AVAILABLE, new BigDecimal(20), new BigDecimal(10), LocalDate.of(2012, 1, 1), "Road Bike", null);
         
-        b7 = new Bike(new BigDecimal(900), new BigDecimal(20), BikeStatus.RESERVED, new BigDecimal(20), new BigDecimal(10), LocalDate.of(2012, 1, 1), "Mountain Bike", res1);
-        b8 = new Bike(new BigDecimal(900), new BigDecimal(15), BikeStatus.RESERVED, new BigDecimal(20), new BigDecimal(10), LocalDate.of(2012, 1, 1), "Road Bike", res1);
+        // b3 = new Bike(new BigDecimal(150), new BigDecimal(40), BikeStatus.AVAILABLE, new BigDecimal(10), new BigDecimal(10), LocalDate.of(2017, 1, 1), "Hybrid Bike", null);
+        // b4 = new Bike(new BigDecimal(120), new BigDecimal(15), BikeStatus.AVAILABLE, new BigDecimal(9), new BigDecimal(10), LocalDate.of(2015, 1, 1), "Road Bike", null);
+
+        // b5 = new Bike(new BigDecimal(150), new BigDecimal(20), BikeStatus.RESERVED, new BigDecimal(11), new BigDecimal(12), LocalDate.of(2017, 1, 1), "Mountain Bike", res1);
+        // b6 = new Bike(new BigDecimal(120), new BigDecimal(15), BikeStatus.RESERVED, new BigDecimal(9), new BigDecimal(10), LocalDate.of(2015, 1, 1), "Road Bike", res2);
+        
+        // b7 = new Bike(new BigDecimal(900), new BigDecimal(20), BikeStatus.RESERVED, new BigDecimal(20), new BigDecimal(10), LocalDate.of(2012, 1, 1), "Mountain Bike", res1);
+        // b8 = new Bike(new BigDecimal(900), new BigDecimal(15), BikeStatus.RESERVED, new BigDecimal(20), new BigDecimal(10), LocalDate.of(2012, 1, 1), "Road Bike", res1);
         
         
 //        BIKE RENTAL SHOPS
@@ -149,7 +197,7 @@ public class SystemTest1 {
         Location l5 = new Location("EH2 2PF", "Shop 5, 14 George St, Edinburgh");
         brs5 = new BikeRentalShop("Shop5", l5, "55555555555", "14:00 to 22:00", bikes5, null);
 
-        
+
         providers.add(brs1);
         providers.add(brs2);
         providers.add(brs3);
