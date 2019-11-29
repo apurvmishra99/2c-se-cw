@@ -79,7 +79,7 @@ public class Controller {
     public String toString() {
         return "{" +
             " action='" + getAction() + "'" +
-            ", loginID='" + getLoginID() + "'" +
+            ", loginID='" + getLoggedInShop() + "'" +
             ", shops='" + getShops() + "'" +
             "}";
     }
