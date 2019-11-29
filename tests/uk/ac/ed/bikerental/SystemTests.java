@@ -3,7 +3,9 @@ package uk.ac.ed.bikerental;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,21 +14,32 @@ import org.junit.jupiter.api.Test;
 
 public class SystemTests {
     // You can add attributes here
-    Booking quote_manager;
+    Booking booking;
     BikeType bike_type1;
-    Bike b1;
     BikeType bike_type2;
     BikeType bike_type3;
+    Bike b1;
     Bike b2;
-    ArrayList<Bike> arr;
-    ArrayList<BikeType> arr1;
+    Bike b3;
+    HashSet<Bike> arr;
+    HashSet<BikeType> arr1;
     BigDecimal bg;
     DateRange dateRange1;
     DateRange dateRange2;
-    ArrayList<Consumer> cons;
-    ArrayList<Shop> shops;
+    HashSet<Consumer> cons;
+    HashSet<Shop> shops;
     Shop shop1;
     Shop shop2;
+    Shop shop3;
+    LocalDate manufactureDate1;
+    LocalDate manufactureDate2;
+    LocalDate manufactureDate3;
+    UUID id1;
+    UUID id2;
+    UUID id3;
+    Set<DateRange> bookingDates;
+    BikeStatus status;
+    String notes;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -34,15 +47,18 @@ public class SystemTests {
         // DeliveryServiceFactory.setupMockDeliveryService();
 
         // Put your test setup here
-        bike_type1 = new BikeType("Mountain");
-        b1 = new Bike(bike_type1, 0);
-        bike_type2 = new BikeType("Commercial");
-        bike_type3 = new BikeType("Stunt");
-        b2 = new Bike(bike_type2, 0);
-        arr = new ArrayList<>();
+        bike_type1 = new BikeType("Mountain", new BigDecimal(500), new BigDecimal(0.1));
+        bike_type2 = new BikeType("Commercial", new BigDecimal(150), new BigDecimal(0.1));
+        bike_type3 = new BikeType("Stunt", new BigDecimal(250), new BigDecimal(0.2));
+        
+        b1 = new Bike(bike_type1, shop1);
+        b2 = new Bike(bike_type2, shop1);
+        b3 = new Bike(bike_type3, shop2)
+        
+        arr = new HashSet<>();
         arr.add(b1);
         arr.add(b2);
-        arr1 = new ArrayList<>();
+        arr1 = new HashSet<>();
         // arr1.add(bike_type1);arr1.add(bike_type2);
         arr1.add(bike_type3);
         provider_1 = new Provider("Dezaw Nam", new Location("EH10 37Y", "Somewhere"), "7978679389");
@@ -50,10 +66,10 @@ public class SystemTests {
         arr.add(new Bike(new BikeType("Stunt"), 0));
         provider_2 = new Provider("Sap Boe", new Location("EH16 8HT", "Appleton Tower"), "7876092376");
         provider_2.registerBikes(arr);
-        cons = new ArrayList<>();
+        cons = new HashSet<>();
         cons.add(new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"));
         cons.add(new Consumer("Saptanshu", "Bose", new Location("EH16 8HT", "Appleton Tower"), "79828983892"));
-        pros = new ArrayList<>();
+        pros = new HashSet<>();
         // qm = new QuoteManager(cons, pros);
         pros.add(provider_1);
         pros.add(provider_2);
@@ -76,11 +92,11 @@ public class SystemTests {
      */
     @Test
     void testsGetQuote() throws Exception {
-        ArrayList<Quote> quotes = (ArrayList<Quote>) quote_manager.makeThem(
+        HashSet<Quote> quotes = (HashSet<Quote>) quote_manager.makeThem(
                 new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), dateRange1,
                 arr1);
-        ArrayList<Quote> quote = new ArrayList<>();
-        ArrayList<Bike> bbk = new ArrayList<>();
+        HashSet<Quote> quote = new HashSet<>();
+        HashSet<Bike> bbk = new HashSet<>();
         bbk.add(new Bike(bike_type3, 0));
         quote.add(new Quote(new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"),
                 new Provider("Sap Boe", new Location("EH16 8HT", "Appleton Tower"), "7876092376"), bbk,
@@ -95,10 +111,10 @@ public class SystemTests {
      */
     @Test
     void testBookQuote() throws Exception {
-        ArrayList<Quote> quotes = (ArrayList<Quote>) quote_manager.makeThem(
+        HashSet<Quote> quotes = (HashSet<Quote>) quote_manager.makeThem(
                 new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), dateRange1,
                 arr1);
-        ArrayList<Bike> bbk = new ArrayList<>();
+        HashSet<Bike> bbk = new HashSet<>();
         bbk.add(new Bike(bike_type3, 0));
         Quote q = new Quote(new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"),
                 new Provider("Sap Boe", new Location("EH16 8HT", "Appleton Tower"), "7876092376"), bbk,
@@ -118,10 +134,10 @@ public class SystemTests {
      */
     @Test
     void testReturnBike() throws Exception {
-        ArrayList<Quote> quotes = (ArrayList<Quote>) quote_manager.makeThem(
+        HashSet<Quote> quotes = (HashSet<Quote>) quote_manager.makeThem(
                 new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), dateRange1,
                 arr1);
-        ArrayList<Bike> bbk = new ArrayList<>();
+        HashSet<Bike> bbk = new HashSet<>();
         bbk.add(new Bike(bike_type3, 0));
         Quote q = new Quote(new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"),
                 new Provider("Sap Boe", new Location("EH16 8HT", "Appleton Tower"), "7876092376"), bbk,
