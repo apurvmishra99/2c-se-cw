@@ -3,6 +3,7 @@ package uk.ac.ed.bikerental;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -62,21 +63,25 @@ public class Shop {
 
     public Collection<Bike> getBikes(DateRange dates, Map<BikeType, Integer> bikes) {
         assert (dates.isInFuture());
+        Map<BikeType, Integer> copiedBikes = new HashMap<BikeType, Integer>();
+        for (BikeType bt : bikes.keySet()) {
+            copiedBikes.put(bt, new Integer(bikes.get(bt)));
+        }
         Collection<Bike> ret = new HashSet<Bike>();
-        System.out.println("This shop has " + this.bikes + " bikes.");
+        // System.out.println("This shop has " + this.bikes + " bikes.");
         for(Bike b : this.bikes) {
             if (b.isAvailable(dates)) {
                 BikeType bt = b.getType();
-                int needed = bikes.getOrDefault(bt, 0);
+                int needed = copiedBikes.getOrDefault(bt, 0);
                 if (needed > 0) {
                     ret.add(b);
-                    bikes.put(bt, needed - 1);
-                    bikes.remove(bt, 0);
+                    copiedBikes.put(bt, needed - 1);
+                    copiedBikes.remove(bt, 0);
                 }
             }
         }
-        if (bikes.isEmpty()) {
-            System.out.println("Returning bikelist: " + ret);
+        if (copiedBikes.isEmpty()) {
+            // System.out.println("Returning bikelist: " + ret);
             return ret;
         } else {
             return null;

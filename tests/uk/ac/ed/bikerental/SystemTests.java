@@ -172,7 +172,7 @@ public class SystemTests {
         Collection<Bike> expectedBikes2 = new HashSet<Bike>();
         expectedBikes2.add(b7);
         expectedBikes2.add(b9);
-        Quote q2 = new Quote(new BigDecimal(60), new BigDecimal(300), dateRange1, customerLocation, s1, expectedBikes1);
+        Quote q2 = new Quote(new BigDecimal(80), new BigDecimal(300), dateRange1, customerLocation, s1, expectedBikes1);
 
         Collection<Quote> expectedQuotes = new HashSet<Quote>();
         expectedQuotes.add(q1);
