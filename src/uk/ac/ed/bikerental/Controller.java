@@ -1,11 +1,11 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 public class Controller {
 
@@ -56,6 +56,24 @@ public class Controller {
     public void login(Shop shop, String password) {
         if (shop.auth(password)) {
             this.loggedInShop = shop;
+        }
+    }
+
+    public void addBike(BikeType bikeType) {
+        this.addBike(bikeType, LocalDate.now(), "");
+    }
+
+    public void addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
+        if (this.loggedInShop == null) {
+            throw new Error("User not logged in");
+        }
+        this.loggedInShop.addBike(bikeType, manifactureDate, notes);;
+    }
+
+    public void addBikeType(String s, BigDecimal replacementValue, BigDecimal depreciationRate) {
+        BikeType newBikeType = new BikeType(s, replacementValue, depreciationRate);
+        if (!this.bikeTypes.add(newBikeType)) {
+            throw new Error("BikeType already present");
         }
     }
 

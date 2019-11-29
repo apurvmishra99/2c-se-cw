@@ -48,6 +48,14 @@ public class Shop {
         this.partners.add(s);
     }
 
+    public void addBike(BikeType bikeType) {
+        this.addBike(bikeType, LocalDate.now(), "");
+    }
+
+    public void addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
+        this.bikes.add(new Bike(bikeType, this, manifactureDate, notes));
+    }
+
     public BigDecimal generateDeposit(Collection<Bike> bikeList, LocalDate startDate) {
         BigDecimal ret = new BigDecimal(0);
         for (Bike b : bikeList) {
