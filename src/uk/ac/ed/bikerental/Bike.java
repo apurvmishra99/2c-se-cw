@@ -12,7 +12,7 @@ public class Bike {
     private BikeType type;
     private UUID id;
     private Shop owner;
-    private LocalDate manifactureDate;
+    private LocalDate manufactureDate;
     private Set<DateRange> bookingDates;
     private BikeStatus status;
     private String notes;
@@ -21,11 +21,11 @@ public class Bike {
         this(type, owner, LocalDate.now(), "");
     }
 
-    public Bike(BikeType type, Shop owner, LocalDate manifactureDate, String notes) {
+    public Bike(BikeType type, Shop owner, LocalDate manufactureDate, String notes) {
         this.type = type;
         this.id = UUID.randomUUID();
         this.owner = owner;
-        this.manifactureDate = manifactureDate;
+        this.manufactureDate = manufactureDate;
         this.bookingDates = new HashSet<DateRange>();
         this.status = BikeStatus.AVAIALBLE;
         this.notes = notes;
@@ -66,8 +66,12 @@ public class Bike {
         return this.owner;
     }
 
-    public Set<DateRange> getUnavailabile() {
+    public Set<DateRange> getBookingDates() {
         return this.bookingDates;
+    }
+
+    public LocalDate getmanufactureDate() {
+        return this.manufactureDate;
     }
 
     public BikeStatus getStatus() {
