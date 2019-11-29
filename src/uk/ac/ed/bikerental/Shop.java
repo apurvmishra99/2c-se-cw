@@ -63,6 +63,7 @@ public class Shop {
     public Collection<Bike> getBikes(DateRange dates, Map<BikeType, Integer> bikes) {
         assert (dates.isInFuture());
         Collection<Bike> ret = new HashSet<Bike>();
+        System.out.println("This shop has " + this.bikes + " bikes.");
         for(Bike b : this.bikes) {
             if (b.isAvailable(dates)) {
                 BikeType bt = b.getType();
@@ -75,6 +76,7 @@ public class Shop {
             }
         }
         if (bikes.isEmpty()) {
+            System.out.println("Returning bikelist: " + ret);
             return ret;
         } else {
             return null;
@@ -109,14 +111,14 @@ public class Shop {
         return this.pricingPolicy;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-            " id='" + getId() + "'" +
-            ", address='" + getAddress() + "'" +
-            ", hours='" + getHours() + "'" +
-            ", partners='" + getPartners() + "'" +
-            ", bikes='" + getBikes() + "'" +
-            "}";
-    }
+    // @Override
+    // public String toString() {
+    //     return "{" +
+    //         " id='" + getId() + "'" +
+    //         ", address='" + getAddress() + "'" +
+    //         ", hours='" + getHours() + "'" +
+    //         ", partners='" + getPartners() + "'" +
+    //         ", bikes='" + getBikes() + "'" +
+    //         "}";
+    // }
 }

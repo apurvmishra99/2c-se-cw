@@ -1,7 +1,5 @@
 package uk.ac.ed.bikerental;
 
-import static org.junit.Assert.assertTrue;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +34,7 @@ public class Bike {
     }
 
     public boolean book(DateRange dateRange) {
-        assertTrue(dateRange.isInFuture());
+        assert (dateRange.isInFuture());
         if (isAvailable(dateRange)) {
             bookingDates.add(dateRange);
             return true;
@@ -45,7 +43,7 @@ public class Bike {
     }
 
     public boolean isAvailable(DateRange dateRange) {
-        assertTrue(dateRange.isInFuture());
+        assert (dateRange.isInFuture());
         for (DateRange d : bookingDates) {
             if (dateRange.overlaps(d)) {
                 return false;
@@ -85,11 +83,11 @@ public class Bike {
     @Override
     public String toString() {
         return "{" +
-            " type='" + getType() + "'" +
-            ", id='" + getId() + "'" +
-            ", owner='" + getOwner() + "'" +
-            ", status='" + getStatus() + "'" +
-            ", notes='" + getNotes() + "'" +
-            "}";
+            " type='" + getType() + "'\n" +
+            ", id='" + getId() + "'\n" +
+            ", owner='" + getOwner() + "'\n" +
+            ", status='" + getStatus() + "'\n" +
+            ", notes='" + getNotes() + "'\n" +
+            "}\n";
     }
 }

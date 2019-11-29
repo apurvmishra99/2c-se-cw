@@ -1,161 +1,267 @@
 package uk.ac.ed.bikerental;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 public class SystemTests {
-    // You can add attributes here
-    Booking booking;
-    BikeType bike_type1;
-    BikeType bike_type2;
-    BikeType bike_type3;
+    Set<Shop> providers = new HashSet<>();
+    // Customer cr1 = new Customer("ABCD", "XYZ");
+    // Customer cr2 = new Customer("1234", "890");
+
+    // BIKE RENTAL SHOPS
+    Shop s1;
+    Shop s2;
+    Shop s3;
+    Shop s4;
+    Shop s5;
+
+    // BIKES
     Bike b1;
     Bike b2;
     Bike b3;
-    HashSet<Bike> arr;
-    HashSet<BikeType> arr1;
-    BigDecimal bg;
+    Bike b4;
+    Bike b5;
+    Bike b6;
+    Bike b7;
+    Bike b8;
+    Bike b9;
+    Bike b10;
+    Bike b11;
+    Bike b12;
+    Bike b13;
+
+    BikeType bikeType1;
+    BikeType bikeType2;
+    BikeType bikeType3;
+    BikeType bikeType4;
+    BikeType bikeType5;
+
+    // COLLECTION OF BIKES
+    HashSet<Bike> bikes1;
+    HashSet<Bike> bikes2;
+    HashSet<Bike> bikes3;
+    HashSet<Bike> bikes4;
+    HashSet<Bike> bikes5;
+
+    // DATE RANGES DEFINITION
     DateRange dateRange1;
     DateRange dateRange2;
-    HashSet<Consumer> cons;
-    HashSet<Shop> shops;
-    Shop shop1;
-    Shop shop2;
-    Shop shop3;
-    LocalDate manufactureDate1;
-    LocalDate manufactureDate2;
-    LocalDate manufactureDate3;
-    UUID id1;
-    UUID id2;
-    UUID id3;
-    Set<DateRange> bookingDates;
-    BikeStatus status;
-    String notes;
+    DateRange dateRange3;
+
+    LocalDate datePast;
+    LocalDate dateNow;
+    LocalDate dateFuture;
+
+    Location customerLocation;
+    Location loc1;
+    Location loc2;
+    Location loc3;
+    Location loc4;
+    Location loc5;
+
+    // BOOKINGS
+    Booking l1;
+    Booking l2;
+    Booking l3;
+
+    // EXPECTED QUOTES
+    Set<Quote> expectedQuotes;
+
+    Controller controller;
+    Location loc;
+    HashMap<BikeType, Integer> bikesRequested;
 
     @BeforeEach
     void setUp() throws Exception {
-        // Setup mock delivery service before each tests
-        // DeliveryServiceFactory.setupMockDeliveryService();
+        // Mock delivery
+        DeliveryServiceFactory.setupMockDeliveryService();
 
-        // Put your test setup here
-        bike_type1 = new BikeType("Mountain", new BigDecimal(500), new BigDecimal(0.1));
-        bike_type2 = new BikeType("Commercial", new BigDecimal(150), new BigDecimal(0.1));
-        bike_type3 = new BikeType("Stunt", new BigDecimal(250), new BigDecimal(0.2));
+        // Dates
+        dateRange1 = new DateRange(LocalDate.of(2020, 1, 8), LocalDate.of(2020, 1, 9));
+        dateRange2 = new DateRange(LocalDate.of(2020, 1, 7), LocalDate.of(2020, 2, 10));
+        dateRange3 = new DateRange(LocalDate.of(2021, 1, 7), LocalDate.of(2021, 1, 10));
         
-        b1 = new Bike(bike_type1, shop1);
-        b2 = new Bike(bike_type2, shop1);
-        b3 = new Bike(bike_type3, shop2)
-        
-        arr = new HashSet<>();
-        arr.add(b1);
-        arr.add(b2);
-        arr1 = new HashSet<>();
-        // arr1.add(bike_type1);arr1.add(bike_type2);
-        arr1.add(bike_type3);
-        provider_1 = new Provider("Dezaw Nam", new Location("EH10 37Y", "Somewhere"), "7978679389");
-        provider_1.registerBikes(arr);
-        arr.add(new Bike(new BikeType("Stunt"), 0));
-        provider_2 = new Provider("Sap Boe", new Location("EH16 8HT", "Appleton Tower"), "7876092376");
-        provider_2.registerBikes(arr);
-        cons = new HashSet<>();
-        cons.add(new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"));
-        cons.add(new Consumer("Saptanshu", "Bose", new Location("EH16 8HT", "Appleton Tower"), "79828983892"));
-        pros = new HashSet<>();
-        // qm = new QuoteManager(cons, pros);
-        pros.add(provider_1);
-        pros.add(provider_2);
-        this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 8), LocalDate.of(2019, 1, 10));
-        this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 7), LocalDate.of(2019, 1, 10));
-        provider_1.setDailyRentalPrice(bike_type1, new BigDecimal(500.0));
-        provider_1.setDailyRentalPrice(bike_type2, new BigDecimal(500.0));// provider_1.setDailyRentalPrice(bike_type3,
-                                                                          // new BigDecimal(800.0));
-        provider_2.setDailyRentalPrice(bike_type2, new BigDecimal(400.0));
-        provider_2.setDailyRentalPrice(bike_type1, new BigDecimal(500.0));
-        provider_2.setDailyRentalPrice(bike_type3, new BigDecimal(800.0));
-        quote_manager = new QuoteManager(cons, pros);
+
+        datePast = LocalDate.of(2017, 1, 7);
+        dateNow = LocalDate.now();
+        dateFuture = LocalDate.of(2022, 5, 1);
+
+        customerLocation = new Location("EH8 8KK", "100111 Informatics Forum");
+        loc1 = new Location("EH7 4EG", "38 Haddington Place");
+        loc2 = new Location("EH3 9LW", "15 Leven Terrace");
+        loc3 = new Location("CA3 1LW", "Cagliariiii");
+        loc4 = new Location("eh1 1jh", "Somewhere in Edi");
+        loc5 = new Location("eh4 5th", "30 Collegiate, Edinburgh");
+
+        controller = new Controller();
+
+        // Add bike types
+        bikeType1 = controller.addBikeType("Mountain", new BigDecimal(500), new BigDecimal(0.1));
+        bikeType2 = controller.addBikeType("Commercial", new BigDecimal(150), new BigDecimal(0.1));
+        bikeType3 = controller.addBikeType("Stunt", new BigDecimal(250), new BigDecimal(0.2));
+        bikeType4 = controller.addBikeType("BT1", new BigDecimal(20), new BigDecimal(0.5));
+        bikeType5 = controller.addBikeType("BTT", new BigDecimal(40), new BigDecimal(0.75));
+
+        // Initialise Shop2 -- owns 2xType1 + 1xType2
+        s1 = controller.addShop(loc1, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.4),
+                new LinearDepreciationPolicy(), new MultidayPricingPolicy());
+        controller.login(s1, "");
+        b1 = controller.addBike(bikeType1);
+        b2 = controller.addBike(bikeType2, datePast, "We love SE");
+        b3 = controller.addBike(bikeType1);
+        controller.setDailyPrice(bikeType1, new BigDecimal(10));
+        controller.setDailyPrice(bikeType2, new BigDecimal(20));
+
+        // Initialise Shop2 -- owns 2xType2 + 1xType4
+        s2 = controller.addShop(loc2, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1),
+                new DoubleDecliningPolicy(), new DefaultPricingPolicy());
+        controller.login(s2, "");
+        b4 = controller.addBike(bikeType2);
+        b5 = controller.addBike(bikeType4, dateNow, "We love SE");
+        b6 = controller.addBike(bikeType2);
+        controller.setDailyPrice(bikeType2, new BigDecimal(20));
+        controller.setDailyPrice(bikeType4, new BigDecimal(30));
+
+        // Initialise Shop3 -- owns 2xType1 + 1xType4
+        s3 = controller.addShop(loc3, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.3));
+        controller.login(s3, "");
+        b7 = controller.addBike(bikeType1);
+        b8 = controller.addBike(bikeType4);
+        b9 = controller.addBike(bikeType1);
+        controller.setDailyPrice(bikeType1, new BigDecimal(30));
+        controller.setDailyPrice(bikeType4, new BigDecimal(40));
+
+        // Initialise Shop4 -- owns 3xType1
+        s4 = controller.addShop(loc4, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.2));
+        controller.login(s4, "");
+        b10 = controller.addBike(bikeType1);
+        b11 = controller.addBike(bikeType1);
+        b12 = controller.addBike(bikeType1);
+        controller.setDailyPrice(bikeType1, new BigDecimal(40));
+
+        s1.addPartner(s2);
+        s2.addPartner(s1);
+        s4.addPartner(s5);
+        // s5.addPartner(s4);
     }
 
     // TODO: Write system tests covering the three main use cases
-    /**
-     * Test for the get quotes checks if the standard answer meets the answer
-     * 
-     * @throws Exception
-     */
     @Test
-    void testsGetQuote() throws Exception {
-        HashSet<Quote> quotes = (HashSet<Quote>) quote_manager.makeThem(
-                new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), dateRange1,
-                arr1);
-        HashSet<Quote> quote = new HashSet<>();
-        HashSet<Bike> bbk = new HashSet<>();
-        bbk.add(new Bike(bike_type3, 0));
-        quote.add(new Quote(new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"),
-                new Provider("Sap Boe", new Location("EH16 8HT", "Appleton Tower"), "7876092376"), bbk,
-                new BigDecimal(800), dateRange1));
-        assertEquals(quote, quotes);
-    }
+    void findingAQuote() {
 
-    /**
-     * Test for the Book Quote
-     * 
-     * @throws Exception
-     */
-    @Test
-    void testBookQuote() throws Exception {
-        HashSet<Quote> quotes = (HashSet<Quote>) quote_manager.makeThem(
-                new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), dateRange1,
-                arr1);
-        HashSet<Bike> bbk = new HashSet<>();
-        bbk.add(new Bike(bike_type3, 0));
-        Quote q = new Quote(new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"),
-                new Provider("Sap Boe", new Location("EH16 8HT", "Appleton Tower"), "7876092376"), bbk,
-                new BigDecimal(800), dateRange1);
+        // First user requires 2xType1
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
 
-        Order or = quote_manager.bookQuote(
-                new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), q, quotes);
-        Order rigth = new Order(q);
-        rigth.setOrderId(new BigInteger("0"));
-        assertEquals(or, rigth);
-    }
+        // Expected object:
+        Collection<Bike> expectedBikes1 = new HashSet<Bike>();
+        expectedBikes1.add(b1);
+        expectedBikes1.add(b3);
+        Quote q1 = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1, expectedBikes1);
+        
+        Collection<Bike> expectedBikes2 = new HashSet<Bike>();
+        expectedBikes2.add(b7);
+        expectedBikes2.add(b9);
+        Quote q2 = new Quote(new BigDecimal(60), new BigDecimal(300), dateRange1, customerLocation, s1, expectedBikes1);
 
-    /**
-     * the test for return bike use case
-     * 
-     * @throws Exception
-     */
-    @Test
-    void testReturnBike() throws Exception {
-        HashSet<Quote> quotes = (HashSet<Quote>) quote_manager.makeThem(
-                new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), dateRange1,
-                arr1);
-        HashSet<Bike> bbk = new HashSet<>();
-        bbk.add(new Bike(bike_type3, 0));
-        Quote q = new Quote(new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"),
-                new Provider("Sap Boe", new Location("EH16 8HT", "Appleton Tower"), "7876092376"), bbk,
-                new BigDecimal(800), dateRange1);
+        Collection<Quote> expectedQuotes = new HashSet<Quote>();
+        expectedQuotes.add(q1);
+        expectedQuotes.add(q2);
 
-        Order or = quote_manager.bookQuote(
-                new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), q, quotes);
+        Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);
+        // System.out.println(actualQuotes);
+        assertEquals(expectedQuotes, actualQuotes);
+        // Call method Quote()
 
-        quote_manager.returnBike(
-                new Consumer("Wazeed", "Naeem", new Location("EH16 5AY", "Pollock Halls"), "79828793892"), or);
-        assertEquals(true, provider_2.getReturnedBike().contains(new Bike(bike_type3, 0)));
-    }
 
-    }
-    // TODO: Write system tests covering the three main use cases
 
-    @Test
-    void getQuotes_test() {
 
+
+    //     ms.setDepreciationMethod("DDBD");
+    //     actualQuotes = ms.createCustomer("Dan", "Wilks", l_customer, "999999999", bikesReq, dateRange3, "Delivery");
+
+    //     int numQuotes = actualQuotes.size();
+
+    //     assertEquals(numQuotes, 2);// CHECKING IF 2 QUOTES HAVE BEEN RETURNED
+
+    //     java.util.Iterator<Quote> quote = actualQuotes.iterator();
+    //     for (int i = 0; i < numQuotes; ++i) {
+    //         Quote actualQ = quote.next();
+
+    //         if (actualQ.getBrs().getName() == "Shop1") {
+    //             assertEquals(actualQ.getBikes().get(0).getType().getTypeName(), "Mountain Bike");
+    //             assertEquals(actualQ.getBikes().get(1).getType().getTypeName(), "Road Bike");
+
+    //             assertEquals(actualQ.getTotalPrice(), new BigDecimal(35));
+    //             assertEquals(actualQ.getDeposit().setScale(2, RoundingMode.CEILING), new BigDecimal("184.32"));
+    //         } else if (actualQ.getBrs().getName() == "Shop5") {
+    //             assertEquals(actualQ.getBikes().get(0).getType().getTypeName(), "Mountain Bike");
+    //             assertEquals(actualQ.getBikes().get(1).getType().getTypeName(), "Road Bike");
+
+    //             assertEquals(actualQ.getTotalPrice(), new BigDecimal(35));
+    //             assertEquals(actualQ.getDeposit().setScale(2, RoundingMode.CEILING), new BigDecimal("184.32"));
+    //         } else
+    //             assert (false);// WRONG QUOTE
+    //     }
+    // }
+
+    // @Test
+    // void bookingAQuote() {
+
+    //     // actualQuotes = ms.createCustomer("Dan", "Wilks", l_customer, "999999999",
+    //     // bikesReq, dateRange3, "Delivery");
+
+    //     // Quote selected by the customer
+    //     Quote selectedQuote = new Quote(brs1, dateRange3, bikes1, new BigDecimal(35), new BigDecimal(20));
+
+    //     booking = ms.makeBooking(selectedQuote);
+
+    //     assertEquals(booking.getShop().getName(), "Shop1");
+
+    //     assertEquals(booking.getDeposit(), 20.0);
+    //     assertEquals(booking.getTotalPrice(), 35.0);
+
+    //     assertEquals(booking.getBikes().get(0).getType().getTypeName(), "Mountain Bike");
+    //     assertEquals(booking.getBikes().get(1).getType().getTypeName(), "Road Bike");
+
+    //     // Checking if the status of the bikes has been changed or not
+    //     assertEquals(booking.getBikes().get(0).isStatus(), BikeStatus.RESERVED);
+    //     assertEquals(booking.getBikes().get(1).isStatus(), BikeStatus.RESERVED);
+
+    //     assertEquals((booking.getOrderNumber() + 3), (noOfReservations + 1));
+    //     // +3 as we already have 3 reservations from before to test our getQuotes()
+    //     // function
+
+    //     DeliveryServiceFactory.setupMockDeliveryService();
+    //     MockDeliveryService deliveryService = (MockDeliveryService) DeliveryServiceFactory.getDeliveryService();
+    //     Collection<Deliverable> deliverables = deliveryService.getPickupsOn(booking.getDateRange().getStart());
+
+    //     for (Deliverable deliverable : deliverables) {
+
+    //     }
+    // }
+
+    // @Test
+    // public void returningBikes() {
+    //     BikeRentalShop partnerBrs = brs1;
+    //     ms.returnBikes(booking.getOrderNumber(), partnerBrs);
+
+    //     if (booking.getShop().getName().equals(partnerBrs.getName())) {
+    //         for (Bike bike : booking.getBikes())
+    //             assertEquals(bike.isStatus(), BikeStatus.AVAILABLE);
+    //     } else {
+    //         for (Bike bike : booking.getBikes())
+    //             assertEquals(bike.isStatus(), BikeStatus.PARTNER_TO_ORIGPROVIDER);
+    //     }
     }
 }

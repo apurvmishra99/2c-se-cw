@@ -2,20 +2,26 @@ package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 
-class TestPricingPolicy implements PricingPolicy {
+class MultidayPricingPolicy implements PricingPolicy {
 
-    // public TestPricingPolicy() {};
+    private Map<BikeType, BigDecimal> dailyPrices = new HashMap<BikeType, BigDecimal>();
 
     public void setDailyRentalPrice(BikeType bikeType, BigDecimal dailyPrice){
-        bikeType.setDailyPrice(dailyPrice);
+        dailyPrices.put(bikeType, dailyPrice);
+    }
+
+    public BigDecimal getDailyPrice(BikeType bikeType) {
+        return dailyPrices.get(bikeType);
     }
 
     public BigDecimal calculatePrice(Collection<Bike> bikes, DateRange duration){
         BigDecimal tot = new BigDecimal(0.0);
         for(Bike b : bikes){
-            BigDecimal d = b.getType().getDailyPrice();
+            BigDecimal d = dailyPrices.get(b.getType());
             BigDecimal range = new BigDecimal ( duration.toDays());
             BigDecimal sum = d.multiply(range);
             tot = tot.add(sum);

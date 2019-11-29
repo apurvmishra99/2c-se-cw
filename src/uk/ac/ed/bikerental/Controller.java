@@ -18,11 +18,15 @@ public class Controller {
         this.action = CurrentAction.VIEW;
         this.loggedInShop = null;
         this.shops = new HashSet<Shop>();
+        this.bikeTypes = new HashSet<BikeType>();
     }
 
     public Set<Quote> getQuotes(Map<BikeType, Integer> bikes, DateRange dates, Location location) {
         Set<Quote> ret = new HashSet<Quote>();
         for (Shop s : this.shops) {
+            if (!s.getAddress().isNearTo(location)) {
+                continue;
+            }
             Collection<Bike> bikeList = s.getBikes(dates, bikes);
             if(bikeList != null) {
                 BigDecimal price = s.getPricingPolicy().calculatePrice(bikeList, dates);
@@ -52,6 +56,12 @@ public class Controller {
         b.returnBikes(this.loggedInShop);
     }
 
+    public void setDailyPrice(BikeType bikeType, BigDecimal dailyPrice) {
+        if (this.loggedInShop == null) {
+            throw new Error("User not logged in");
+        }
+        this.loggedInShop.getPricingPolicy().setDailyRentalPrice(bikeType, dailyPrice);
+    }
 
     public void login(Shop shop, String password) {
         if (shop.auth(password)) {
@@ -64,7 +74,7 @@ public class Controller {
     }
 
     public Bike addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
-        assert (manifactureDate.compareTo(LocalDate.now()) < 0);
+        assert (manifactureDate.compareTo(LocalDate.now()) <= 0);
         if (this.loggedInShop == null) {
             throw new Error("User not logged in");
         }
