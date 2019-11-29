@@ -10,6 +10,7 @@ public class Quote {
     protected BigDecimal deposit;
     protected DateRange dates;
     protected Location loc;
+    protected Shop shop;
     protected Collection<Bike> bikeList;
 
     // Shallow copy constructor
@@ -19,16 +20,23 @@ public class Quote {
         this.deposit = q.deposit;
         this.dates = q.dates;
         this.loc = q.loc;
+        this.shop = q.shop;
         this.bikeList = q.bikeList;
     }
 
-    public Quote(BigDecimal price, BigDecimal deposit, DateRange dates, Location loc, Collection<Bike> bikeList) {
+    public Quote(BigDecimal price, BigDecimal deposit, DateRange dates,
+            Location loc, Shop shop, Collection<Bike> bikeList) {
         this.id = UUID.randomUUID();
         this.price = price;
         this.deposit = deposit;
         this.dates = dates;
         this.loc = loc;
+        this.shop = shop;
         this.bikeList = bikeList;
+    }
+
+    public Invoice generateInvoice() {
+        return new Invoice(this);
     }
 
     public UUID getId() {
@@ -49,6 +57,10 @@ public class Quote {
 
     public Location getLoc() {
         return this.loc;
+    }
+
+    public Shop getShop() {
+        return this.shop;
     }
 
     public Collection<Bike> getBikeList() {

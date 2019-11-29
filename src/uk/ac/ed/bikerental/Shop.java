@@ -30,15 +30,15 @@ public class Shop {
         this.valuationPolicy = valuationPolicy;
     }
 
-    private int countBikesByType(BikeType bt) {
-        int ret = 0;
-        for (Bike b : bikes) {
-            if (b.getType() == bt) {
-                ret += 1;
-            }
-        }
-        return ret;
-    }
+    // private int countBikesByType(BikeType bt) {
+    //     int ret = 0;
+    //     for (Bike b : bikes) {
+    //         if (b.getType() == bt) {
+    //             ret += 1;
+    //         }
+    //     }
+    //     return ret;
+    // }
 
     public boolean auth(String s) {
         return true;
@@ -53,7 +53,7 @@ public class Shop {
         for (Bike b : bikeList) {
             ret.add(valuationPolicy.calculateValue(b,startDate));
         }
-        return ret;
+        return ret.multiply(this.depositRate);
     }
 
     // public boolean hasBikes(DateRange dates, Map<BikeType, Integer> bikes) {
@@ -97,6 +97,10 @@ public class Shop {
 
     public String getHours() {
         return this.hours;
+    }
+
+    public BigDecimal getDepositRate() {
+        return this.depositRate;
     }
 
     public Set<Shop> getPartners() {

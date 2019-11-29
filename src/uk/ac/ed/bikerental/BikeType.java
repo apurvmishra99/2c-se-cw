@@ -24,7 +24,7 @@ public class BikeType {
     }
 
     public BigDecimal getDepreciationRate() {
-        return this.replacementValue;
+        return this.depreciationRate;
     }
 
     public BigDecimal getDailyPrice() {
