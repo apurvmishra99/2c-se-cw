@@ -2,14 +2,14 @@ package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 public class Loan {
 
     private UUID id;
     private Shop store;
-    private ArrayList<Bike> bikes;
+    private Set<Bike> bikes;
     private DateRange dates;
     private BigDecimal deposit;
     private LoanStatus status;
@@ -17,14 +17,14 @@ public class Loan {
     private PickupMethod pickupMethod;
 
 
-    public Loan(UUID id, Shop store, ArrayList<Bike> bikes, DateRange dates, BigDecimal deposit, LoanStatus status, String returnConditions, PickupMethod pickupMethod) {
-        this.id = id;
+    public Loan(Shop store, Set<Bike> bikes, DateRange dates, BigDecimal deposit,
+                LoanStatus status, PickupMethod pickupMethod) {
+        this.id = UUID.randomUUID();
         this.store = store;
         this.bikes = bikes;
         this.dates = dates;
         this.deposit = deposit;
-        this.status = status;
-        this.returnConditions = returnConditions;
+        this.status = status;;
         this.pickupMethod = pickupMethod;
     }
 
@@ -36,7 +36,7 @@ public class Loan {
         return this.store;
     }
 
-    public ArrayList<Bike> getBikes() {
+    public Set<Bike> getBikes() {
         return this.bikes;
     }
 

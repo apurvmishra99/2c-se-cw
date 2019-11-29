@@ -1,5 +1,8 @@
 package uk.ac.ed.bikerental;
 
+import static org.junit.Assert.assertTrue;
+
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -9,21 +12,46 @@ public class Bike {
     private BikeType type;
     private UUID id;
     private Shop owner;
+    private LocalDate manifactureDate;
     private Set<DateRange> bookingDates;
     private BikeStatus status;
     private String notes;
 
     public Bike(BikeType type, Shop owner) {
-        this(type, owner, "");
+        this(type, owner, LocalDate.now(), "");
     }
 
-    public Bike(BikeType type, Shop owner, String notes) {
+    public Bike(BikeType type, Shop owner, LocalDate manifactureDate, String notes) {
         this.type = type;
         this.id = UUID.randomUUID();
         this.owner = owner;
+        this.manifactureDate = manifactureDate;
         this.bookingDates = new HashSet<DateRange>();
         this.status = BikeStatus.AVAIALBLE;
         this.notes = notes;
+    }
+
+    public void updateBikeStatus(BikeStatus s) {
+        this.status = s;
+    }
+
+    public boolean book(DateRange dateRange) {
+        assertTrue(dateRange.isInFuture());
+        if (isAvailable(dateRange)) {
+            bookingDates.add(dateRange);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isAvailable(DateRange dateRange) {
+        assertTrue(dateRange.isInFuture());
+        for (DateRange d : bookingDates) {
+            if (dateRange.overlaps(d)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public BikeType getType() {
@@ -48,27 +76,6 @@ public class Bike {
 
     public String getNotes() {
         return this.notes;
-    }
-
-    public void updateBikeStatus(BikeStatus s) {
-        this.status = s;
-    }
-
-    public boolean book(DateRange dateRange) {
-        if (isAvailable(dateRange)) {
-            bookingDates.add(dateRange);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isAvailable(DateRange dateRange) {
-        for (DateRange d: bookingDates) {
-            if (dateRange.overlaps(d)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @Override

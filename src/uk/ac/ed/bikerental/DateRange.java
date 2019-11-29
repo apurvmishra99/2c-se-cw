@@ -30,24 +30,6 @@ public class DateRange {
     }
 
     /**
-     * start date getter.
-     *
-     * @return start date
-     */
-    public LocalDate getStart() {
-        return this.start;
-    }
-
-    /**
-     * end date getter.
-     *
-     * @return end date
-     */
-    public LocalDate getEnd() {
-        return this.end;
-    }
-
-    /**
      * Calculate years between start and end date.
      *
      * @return years
@@ -63,6 +45,34 @@ public class DateRange {
      */
     public long toDays() {
         return ChronoUnit.DAYS.between(this.getStart(), this.getEnd());
+    }
+
+    /**
+     * Checks wether this DateRange starts today or later.
+     *
+     * @return True if start is today or later, False otherwise
+     */
+    public boolean isInFuture() {
+        LocalDate now = LocalDate.now();
+        return this.start.compareTo(now) >= 0;
+    }
+
+    /**
+     * start date getter.
+     *
+     * @return start date
+     */
+    public LocalDate getStart() {
+        return this.start;
+    }
+
+    /**
+     * end date getter.
+     *
+     * @return end date
+     */
+    public LocalDate getEnd() {
+        return this.end;
     }
 
     /**
