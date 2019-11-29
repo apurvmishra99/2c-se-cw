@@ -34,6 +34,11 @@ public class Controller {
         return ret;
     }
 
+    public Invoice bookQuote(Quote quote) {
+        
+        return null;
+    }
+
     public CurrentAction getAction() {
         return this.action;
     }
