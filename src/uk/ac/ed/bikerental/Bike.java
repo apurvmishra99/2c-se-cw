@@ -1,6 +1,5 @@
 package uk.ac.ed.bikerental;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -82,16 +81,4 @@ public class Bike {
             ", notes='" + getNotes() + "'" +
             "}";
     }
-<<<<<<< HEAD
-
-    public Bike(BikeType bt) {
-        this.type = bt;
-    }
-
-    public BikeType getType() {
-        // TODO: Implement Bike.getType
-        return this.type;
-    }
-=======
->>>>>>> 897d7a69a9161ec79698593d5e2b3ce7f5c9c0ed
 }

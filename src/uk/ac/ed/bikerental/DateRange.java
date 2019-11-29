@@ -73,7 +73,7 @@ public class DateRange {
      */
     public Boolean overlaps(DateRange other) {
         // If starts after other, then should also end before other.
-        // Similarly appliied to opposite
+        // Similarly applied to opposite
         if (this.start.compareTo(other.getStart()) > 0) {
             return this.start.compareTo(other.getEnd()) < 0;
         } else if (this.start.compareTo(other.getStart()) < 0) {
