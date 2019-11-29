@@ -1,6 +1,6 @@
 package uk.ac.ed.bikerental;
 
-enum LoanStatus {
+enum BookingStatus {
     BOOKED,
     ONLOAN,
     RETURNED;

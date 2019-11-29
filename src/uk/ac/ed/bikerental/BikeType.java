@@ -6,10 +6,12 @@ import java.util.Objects;
 public class BikeType {
     private String name;
     private BigDecimal replacementValue;
+    private BigDecimal depreciationRate;
 
-    public BikeType(String s, BigDecimal replacementValue) {
+    public BikeType(String s, BigDecimal replacementValue, BigDecimal depreciationRate) {
         this.name = s;
         this.replacementValue = replacementValue;
+        this.depreciationRate = depreciationRate;
     }
 
     public String getName() {
@@ -17,6 +19,10 @@ public class BikeType {
     }
 
     public BigDecimal getReplacementValue() {
+        return this.replacementValue;
+    }
+
+    public BigDecimal getDepreciationRate() {
         return this.replacementValue;
     }
 

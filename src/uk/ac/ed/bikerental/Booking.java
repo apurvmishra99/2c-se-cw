@@ -1,31 +1,70 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
-public class Loan {
+public class Booking implements Deliverable {
 
     private UUID id;
     private Shop store;
     private Set<Bike> bikes;
     private DateRange dates;
     private BigDecimal deposit;
-    private LoanStatus status;
+    private BookingStatus status;
     private String returnConditions;
     private PickupMethod pickupMethod;
 
 
-    public Loan(Shop store, Set<Bike> bikes, DateRange dates, BigDecimal deposit,
-                LoanStatus status, PickupMethod pickupMethod) {
+    public Booking(Shop store, Set<Bike> bikes, DateRange dates,
+                BigDecimal deposit, PickupMethod pickupMethod) {
         this.id = UUID.randomUUID();
         this.store = store;
         this.bikes = bikes;
         this.dates = dates;
         this.deposit = deposit;
-        this.status = status;;
+        this.status = BookingStatus.BOOKED;
         this.pickupMethod = pickupMethod;
+    }
+
+    public void updateBikesStatus(BikeStatus bs) {
+        for (Bike b : this.bikes) {
+            b.updateBikeStatus(bs);
+        }
+    }
+
+    public void updateBookingStatus(BookingStatus ls) {
+        this.status = ls;
+        BikeStatus bs = null;
+        if (ls == BookingStatus.ONLOAN) {
+            bs = BikeStatus.ONLOAN;
+        } else if (ls == BookingStatus.RETURNED) {
+            bs = BikeStatus.AVAILABLE;
+        }
+        this.updateBikesStatus(bs);
+    }
+
+    public void returnBikes(Shop shop) {
+        if (shop != this.store) {
+            DeliveryServiceFactory
+                    .getDeliveryService()
+                    .scheduleDelivery(this, this.store.getAddress(), shop.getAddress(), LocalDate.now());
+        } else {
+            updateBookingStatus(BookingStatus.RETURNED);
+        }
+    }
+
+    public void onPickup() {
+        this.updateBikesStatus(BikeStatus.DELIVERY);
+    }
+
+    public void onDropoff() {
+        if (this.status == BookingStatus.ONLOAN) {
+            this.updateBookingStatus(BookingStatus.RETURNED);
+        } else {
+            this.updateBookingStatus(BookingStatus.ONLOAN);
+        }
     }
 
     public UUID getId() {
@@ -48,7 +87,7 @@ public class Loan {
         return this.deposit;
     }
 
-    public LoanStatus getStatus() {
+    public BookingStatus getStatus() {
         return this.status;
     }
 

@@ -1,9 +1,9 @@
 package uk.ac.ed.bikerental;
 
 enum BikeStatus {
-    AVAIALBLE,
+    AVAILABLE,
     DELIVERY,
-    LOAN,
+    ONLOAN,
     REPAIR,
     WRITTENOFF;
 }

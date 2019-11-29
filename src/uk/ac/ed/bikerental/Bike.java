@@ -27,7 +27,7 @@ public class Bike {
         this.owner = owner;
         this.manufactureDate = manufactureDate;
         this.bookingDates = new HashSet<DateRange>();
-        this.status = BikeStatus.AVAIALBLE;
+        this.status = BikeStatus.AVAILABLE;
         this.notes = notes;
     }
 
@@ -70,7 +70,7 @@ public class Bike {
         return this.bookingDates;
     }
 
-    public LocalDate getmanufactureDate() {
+    public LocalDate getManufactureDate() {
         return this.manufactureDate;
     }
 
