@@ -8,9 +8,10 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.*;
 
-public class TestsPricingPolicy {
+public class PricingPolicyTest {
     // You can add attributes here
     TestPricingPolicy tpp;
+    Shop s1;
     BikeType bt1;
     Bike b1;
     BikeType bt2;
@@ -24,9 +25,9 @@ public class TestsPricingPolicy {
     void setUp() throws Exception {
         tpp = new TestPricingPolicy();
         bt1 = new BikeType("Mountain", new BigDecimal(75));
-        b1 = new Bike(bt1);
+        b1 = new Bike(bt1, s1);
         bt2 = new BikeType("Commercial", new BigDecimal(85));
-        b2 = new Bike(bt2);
+        b2 = new Bike(bt2, s1);
         this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 8), LocalDate.of(2019, 1, 10));
         this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 7), LocalDate.of(2019, 1, 10));
         tpp.setDailyRentalPrice(bt1, new BigDecimal(500.0));

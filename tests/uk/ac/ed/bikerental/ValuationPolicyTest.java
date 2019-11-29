@@ -3,7 +3,7 @@ package uk.ac.ed.bikerental;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
-public class ValuationPolicyTests {
+public class ValuationPolicyTest {
     // You can add attributes here
 
     @BeforeEach

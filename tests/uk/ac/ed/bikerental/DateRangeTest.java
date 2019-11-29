@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class TestDateRange {
+class DateRangeTest {
     private DateRange dateRange1, dateRange2, dateRange3;
 
     @BeforeEach
