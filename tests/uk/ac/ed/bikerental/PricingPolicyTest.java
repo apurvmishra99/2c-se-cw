@@ -59,6 +59,11 @@ public class PricingPolicyTest {
 
     @Test
     void testDiscountCal() {
+        // Setting the discount rates
+        tpp.addDiscountRate(1, new BigDecimal(0));
+        tpp.addDiscountRate(3, new BigDecimal(0.05));
+        tpp.addDiscountRate(7, new BigDecimal(0.10));
+        tpp.addDiscountRate(14, new BigDecimal(0.15));
         BigDecimal bgg = tpp.calculatePrice(arr, dateRange2);
         BigDecimal dis = new BigDecimal(0.05);
         BigDecimal one = new BigDecimal(1.0);

@@ -106,6 +106,26 @@ public class Controller {
         this.loggedInShop.getPricingPolicy().setDailyRentalPrice(bikeType, dailyPrice);
     }
 
+    /**
+     * 
+     * @param fromDay
+     * @param discountRate
+     */
+    public void addDiscountRates(int fromDay, BigDecimal discountRate) {
+        if (this.loggedInShop == null) {
+            throw new Error("User not logged in");
+        }
+        if (this.loggedInShop.getPricingPolicy().getClass().getSimpleName().equalsIgnoreCase("DefaultPricingPolicy")) {
+            throw new Error("Pricing policy is set to default can't add discount.");
+        }
+        this.loggedInShop.getPricingPolicy().addDiscountRate(fromDay, discountRate);
+    }
+
+
+    /**
+     * @param shop
+     * @param password
+     */
     public void login(Shop shop, String password) {
         if (shop.auth(password)) {
             this.loggedInShop = shop;
@@ -184,7 +204,7 @@ public class Controller {
      */
     public Shop addShop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate,
             ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
-        Shop shop = new Shop(address, hours, partners, bikes, depositRate, valuationPolicy, pricingPolicy);
+        Shop shop = new Shop(address, hours, partners, bikes, depositRate, valuationPolicy);
         this.shops.add(shop);
         return shop;
     }

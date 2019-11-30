@@ -18,7 +18,7 @@ public class Shop {
     private Set<Bike> bikes;
     private BigDecimal depositRate;
     private ValuationPolicy valuationPolicy;
-    private PricingPolicy pricingPolicy;
+    private MultidayPricingPolicy pricingPolicy;
 
     /**
      * @param address
@@ -29,7 +29,7 @@ public class Shop {
      * @return
      */
     public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate) {
-        this(address, hours, partners, bikes, depositRate, new DefaultValuationPolicy(), new DefaultPricingPolicy());
+        this(address, hours, partners, bikes, depositRate, new DefaultValuationPolicy());
     }
 
     /**
@@ -42,8 +42,8 @@ public class Shop {
      * @param pricingPolicy
      * @return
      */
-    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate,
-            ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
+    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate, 
+                    ValuationPolicy valuationPolicy) {
         this.id = UUID.randomUUID();
         this.address = address;
         this.hours = hours;
@@ -51,7 +51,7 @@ public class Shop {
         this.bikes = bikes;
         this.depositRate = depositRate;
         this.valuationPolicy = valuationPolicy;
-        this.pricingPolicy = pricingPolicy;
+        this.pricingPolicy = new MultidayPricingPolicy();
     }
 
     /**
@@ -188,7 +188,7 @@ public class Shop {
     /**
      * @return PricingPolicy
      */
-    public PricingPolicy getPricingPolicy() {
+    public MultidayPricingPolicy getPricingPolicy() {
         return this.pricingPolicy;
     }
 

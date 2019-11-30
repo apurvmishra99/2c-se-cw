@@ -139,8 +139,14 @@ public class SystemTests {
         bike1 = controller.addBike(bikeType1);
         bike2 = controller.addBike(bikeType2, datePast, "We love SE");
         bike3 = controller.addBike(bikeType1);
+        // Setting the daily prices
         controller.setDailyPrice(bikeType1, new BigDecimal(10));
         controller.setDailyPrice(bikeType2, new BigDecimal(20));
+        // Setting the discount rates
+        controller.addDiscountRates(1, new BigDecimal(0));
+        controller.addDiscountRates(3, new BigDecimal(0.05));
+        controller.addDiscountRates(7, new BigDecimal(0.10));
+        controller.addDiscountRates(14, new BigDecimal(0.15));
 
         // Initialise Shop2 -- owns 2xType2 + 1xType4
         shop2 = controller.addShop(locEH2, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1),
@@ -151,6 +157,11 @@ public class SystemTests {
         bike6 = controller.addBike(bikeType2);
         controller.setDailyPrice(bikeType2, new BigDecimal(20));
         controller.setDailyPrice(bikeType4, new BigDecimal(30));
+        // Setting the discount rates
+        controller.addDiscountRates(1, new BigDecimal(0));
+        controller.addDiscountRates(3, new BigDecimal(0.05));
+        controller.addDiscountRates(7, new BigDecimal(0.10));
+        controller.addDiscountRates(14, new BigDecimal(0.15));
 
         // Initialise Shop3 -- owns 2xType1 + 1xType4
         shop3 = controller.addShop(locCAG, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.3));
@@ -160,6 +171,11 @@ public class SystemTests {
         bike9 = controller.addBike(bikeType1);
         controller.setDailyPrice(bikeType1, new BigDecimal(30));
         controller.setDailyPrice(bikeType4, new BigDecimal(40));
+        // Setting the discount rates
+        controller.addDiscountRates(1, new BigDecimal(0));
+        controller.addDiscountRates(3, new BigDecimal(0.05));
+        controller.addDiscountRates(7, new BigDecimal(0.10));
+        controller.addDiscountRates(14, new BigDecimal(0.15));
 
         // Initialise Shop4 -- owns 3xType1
         shop4 = controller.addShop(locEH3, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.2));
@@ -168,14 +184,16 @@ public class SystemTests {
         bike11 = controller.addBike(bikeType1);
         bike12 = controller.addBike(bikeType1);
         controller.setDailyPrice(bikeType1, new BigDecimal(40));
-
-        // Setup partnerships
+        // Setting the discount rates
+        controller.addDiscountRates(1, new BigDecimal(0));
+        controller.addDiscountRates(3, new BigDecimal(0.05));
+        controller.addDiscountRates(7, new BigDecimal(0.10));
+        controller.addDiscountRates(14, new BigDecimal(0.15));
+        
         shop1.addPartner(shop2);
         shop2.addPartner(shop1);
         shop4.addPartner(shop5);
-
-        // Logout to correctly test security
-        controller.logout();
+        // s5.addPartner(s4);
     }
 
     /**

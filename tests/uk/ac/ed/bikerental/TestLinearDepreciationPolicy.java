@@ -34,7 +34,7 @@ class TestLinearDepreciationPolicy {
         this.date2 = LocalDate.of(2021, 9, 15);
         this.date3 = LocalDate.of(2023, 11, 30);
         this.s1 = new Shop(l1, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1),
-                new LinearDepreciationPolicy(), new DefaultPricingPolicy());
+                new LinearDepreciationPolicy());
         this.bike1 = new Bike(this.type1, this.s1);
         this.bike2 = new Bike(this.type2, this.s1);
     }
