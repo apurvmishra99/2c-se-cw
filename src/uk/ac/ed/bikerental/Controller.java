@@ -54,9 +54,10 @@ public class Controller {
     }
 
     /**
-     * @param quote
-     * @param pickupMethod
+     * @param  quote
+     * @param  pickupMethod
      * @return Invoice
+     * @throws Error if the quote is not available anymore.
      */
     public Invoice bookQuote(Quote quote, PickupMethod pickupMethod) {
         for (Bike b : quote.getBikeList()) {
@@ -75,6 +76,8 @@ public class Controller {
 
     /**
      * @param b
+     * @throws Error if User not logged in
+     * @throws Error if Booking not found
      */
     public void returnBooking(UUID bookingID) {
         if (this.loggedInShop == null) {
@@ -86,23 +89,10 @@ public class Controller {
         this.bookings.get(bookingID).returnBikes(this.loggedInShop);
     }
 
-    // I think we should return bookings with the invoice,
-    // But I don't know how it would be implemented though.
-
-    // public void returnBooking(Invoice invoice) {
-
-    // if (this.loggedInShop == null) {
-    // throw new Error("User not logged in");
-    // }
-    // if (!this.bookings.contains(b)) {
-    // throw new Error("Booking not found.");
-    // }
-    // b.returnBikes(this.loggedInShop);
-    // }
-
     /**
      * @param bikeType
      * @param dailyPrice
+     * @throws Error if User not logged in
      */
     public void setDailyPrice(BikeType bikeType, BigDecimal dailyPrice) {
         if (this.loggedInShop == null) {
@@ -134,6 +124,7 @@ public class Controller {
      * @param manifactureDate
      * @param notes
      * @return Bike
+     * @throws Error if User not logged in
      */
     public Bike addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
         assert (manifactureDate.compareTo(LocalDate.now()) <= 0);
@@ -148,6 +139,7 @@ public class Controller {
      * @param replacementValue
      * @param depreciationRate
      * @return BikeType
+     * @throws Error if BikeType is already registered
      */
     public BikeType addBikeType(String s, BigDecimal replacementValue, BigDecimal depreciationRate) {
         BikeType newBikeType = new BikeType(s, replacementValue, depreciationRate);

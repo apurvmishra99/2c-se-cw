@@ -69,6 +69,14 @@ public class Shop {
     }
 
     /**
+     * @param s
+     * @return True if shop is partnered, False otherwise.
+     */
+    public boolean hasPartner(Shop s) {
+        return this.partners.contains(s);
+    }
+
+    /**
      * @param bikeType
      * @return Bike
      */

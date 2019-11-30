@@ -74,9 +74,13 @@ public class Booking implements Deliverable {
 
     /**
      * @param shop
+     * @throws Error if shops are not partnered
      */
     public void returnBikes(Shop shop) {
         if (shop != this.store) {
+            if (!this.store.hasPartner(shop)) {
+                throw new Error("Shops are not partner.");
+            }
             DeliveryServiceFactory.getDeliveryService().scheduleDelivery(this, this.store.getAddress(),
                     shop.getAddress(), LocalDate.now());
         } else {
