@@ -51,15 +51,19 @@ public class Booking implements Deliverable {
      */
     public void updateBookingStatus(BookingStatus ls) {
         this.status = ls;
-        BikeStatus bs = null;
-        if (ls == BookingStatus.ONLOAN) {
-            System.out.println("Set as ONLOAN");
-            bs = BikeStatus.ONLOAN;
-        } else if (ls == BookingStatus.RETURNED) {
-            System.out.println("Set as AVAIL");
-            bs = BikeStatus.AVAILABLE;
+        switch (this.status) {
+            // Impossible
+            case BOOKED:
+                break;
+            // Delivered to customer
+            case ONLOAN:
+                this.updateBikesStatus(BikeStatus.ONLOAN);
+                break;
+            // Returned to shop
+            case RETURNED:
+                this.updateBikesStatus(BikeStatus.AVAILABLE);
+                break;
         }
-        this.updateBikesStatus(bs);
     }
 
     /**
@@ -85,10 +89,18 @@ public class Booking implements Deliverable {
 
     public void onDropoff() {
         System.out.println("Being dropped off");
-        if (this.status == BookingStatus.ONLOAN) {
-            this.updateBookingStatus(BookingStatus.RETURNED);
-        } else {
+        switch (this.status) {
+        // Delivery to customer
+        case BOOKED:
             this.updateBookingStatus(BookingStatus.ONLOAN);
+            break;
+        // Delivery from partner shop
+        case ONLOAN:
+            this.updateBookingStatus(BookingStatus.RETURNED);
+            break;
+        // Impossible
+        case RETURNED:
+            break;
         }
     }
 

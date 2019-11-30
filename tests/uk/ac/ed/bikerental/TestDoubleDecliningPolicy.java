@@ -41,7 +41,7 @@ class TestDoubleDecliningPolicy {
         BigDecimal d = pol1.calculateValue(bike1, date3).stripTrailingZeros();
         MathContext m = new MathContext(5);
         d = d.round(m);
-        assertEquals(new BigDecimal(61.440).round(m), d);
+        assertEquals(new BigDecimal(49.152).round(m), d);
     }
 
     @Test

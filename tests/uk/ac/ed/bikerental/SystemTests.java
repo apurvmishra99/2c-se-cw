@@ -3,6 +3,7 @@ package uk.ac.ed.bikerental;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -230,17 +231,17 @@ public class SystemTests {
     }
 
     /**
-     * Tries to book an available quote; Normal action, no edge cases;
-     * 
+     * Tries to book an available quote WITHOUT delivery;
+     * Normal action, no edge cases;
      * @asserts Booking object is populated as expected,
      * @asserts Bikes are not available during those dates.
      */
     @Test
-    void bookingAQuote() {
+    void bookingAQuote_pickup() {
 
         Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
         requestedBikes.put(bikeType1, 2);
-        PickupMethod method = PickupMethod.DELIVERY;
+        PickupMethod method = PickupMethod.PICKUP;
         // Expected object:
         Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
         expectedBikeshop1.add(bike1);
@@ -263,6 +264,63 @@ public class SystemTests {
         for (Bike b : l.getBikes()) {
             assertFalse(b.isAvailable(dateRange1));
         }
+    }
+
+    /**
+     * Tries to book an available quote WITH Delivery;
+     * Normal action, no edge cases;
+     * @asserts Booking object is populated as expected,
+     * @asserts Bikes are not available during those dates.
+     */
+    @Test
+    void bookingAQuote_delivery() {
+
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+        PickupMethod method = PickupMethod.DELIVERY;
+        // Expected object:
+        Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
+        expectedBikeshop1.add(bike1);
+        expectedBikeshop1.add(bike3);
+
+        // Quote selected by the customer
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
+
+        // Calling bookQuote()
+        Invoice actualBooking = controller.bookQuote(selectedQuote, method);
+
+        // Expected Invoice()
+        Invoice expectedInvoice = new Invoice(selectedQuote);
+
+        assertEquals(actualBooking, expectedInvoice);
+
+        // Booking object to access bikes
+        Booking booking = new Booking(actualBooking);
+        for (Bike b : booking.getBikes()) {
+            assertFalse(b.isAvailable(dateRange1));
+        }
+
+        // Test delivery
+        LocalDate deliveryDate = actualBooking.getDates().getStart();
+        Collection<Deliverable> pickups;
+        pickups = deliveryService.getPickupsOn(deliveryDate);
+        System.out.println(pickups);
+        assertTrue(Collections.frequency(pickups, booking) == 1);
+
+        // DELIVERY status is same for delivery to customer or shop
+        deliveryService.carryOutPickups(deliveryDate);
+        for (Bike b : booking.getBikes()) {
+            assertEquals(BikeStatus.DELIVERY, b.getStatus());
+        }
+
+        deliveryService.carryOutDropoffs();
+        for (Bike b : booking.getBikes()) {
+            System.out.println(b.getStatus());
+            assertEquals(BikeStatus.ONLOAN, b.getStatus());
+        }
+
+        // assertEquals(BookingStatus.ONLOAN, booking.getStatus());
     }
 
     /**
@@ -293,11 +351,13 @@ public class SystemTests {
         l1 = new Booking(actualBooking);
         id1 = l1.getId();
 
+        // Collect the booking
+        controller.collectBooking(id1);
         // Returning the booking
         controller.returnBooking(id1);
 
         for (Bike b : l1.getBikes()) {
-            assertEquals(b.getStatus(), BikeStatus.AVAILABLE);
+            assertEquals(BikeStatus.AVAILABLE, b.getStatus());
         }
     }
 
@@ -330,6 +390,8 @@ public class SystemTests {
         l1 = new Booking(actualBooking);
         id1 = l1.getId();
 
+        // Collect the booking
+        controller.collectBooking(id1);
         // Returning the booking
         controller.returnBooking(id1);
 
@@ -338,17 +400,53 @@ public class SystemTests {
         Collection<Deliverable> pickups;
         pickups = deliveryService.getPickupsOn(LocalDate.now());
         System.out.println(pickups);
-        assertTrue(Collections.frequency(pickups, l1) == 1);
 
+        // DELIVERY status is same for delivery to customer or shop
         deliveryService.carryOutPickups(LocalDate.now());
         for (Bike b : l1.getBikes()) {
-            assertEquals(b.getStatus(), BikeStatus.DELIVERY);
+            assertEquals(BikeStatus.DELIVERY, b.getStatus());
         }
 
         deliveryService.carryOutDropoffs();
         for (Bike b : l1.getBikes()) {
             System.out.println(b.getStatus());
-            assertEquals(b.getStatus(), BikeStatus.AVAILABLE);
+            assertEquals(BikeStatus.AVAILABLE, b.getStatus());
         }
+    }
+
+        /**
+     * Tries to return bikes;
+     * User not logged in;
+     * @assert Error is thrown
+     */
+    @Test
+    public void returningBikes_unauthUser() {
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+        PickupMethod method = PickupMethod.DELIVERY;
+
+        // Bikes user rented:
+        Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
+        expectedBikeshop1.add(bike1);
+        expectedBikeshop1.add(bike3);
+
+        // Quote which was selected by the customer
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
+
+
+        // Invoice which was generated
+        Invoice actualBooking = controller.bookQuote(selectedQuote, method);
+
+        // Creating a booking object
+        l1 = new Booking(actualBooking);
+        id1 = l1.getId();
+
+        // Collect the booking
+        controller.collectBooking(id1);
+        // Try to return the order
+        assertThrows(Error.class, () -> {
+            controller.returnBooking(id1);
+        });
     }
 }
