@@ -83,6 +83,10 @@ public class Controller {
         return invoice;
     }
 
+    /**
+     * 
+     * @param bookingID
+     */
     public void collectBooking(UUID bookingID) {
         if (this.loggedInShop == null) {
             throw new Error("User not logged in");
