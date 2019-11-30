@@ -1,14 +1,17 @@
 package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
+import java.util.Map.Entry;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 class MultidayPricingPolicy implements PricingPolicy {
 
     private Map<BikeType, BigDecimal> dailyPrices = new HashMap<BikeType, BigDecimal>();
-
+    private TreeMap<Integer, BigDecimal> discountRates = new TreeMap<Integer, BigDecimal>();
+    
     /**
      * @param bikeType
      * @param dailyPrice
@@ -24,6 +27,15 @@ class MultidayPricingPolicy implements PricingPolicy {
     public BigDecimal getDailyPrice(BikeType bikeType) {
         return dailyPrices.get(bikeType);
     }
+    
+    /**
+     * 
+     * @param fromDay
+     * @param discount
+     */
+    public void addDiscountRate(int fromDay, BigDecimal discount) {
+        discountRates.put(fromDay, discount);
+    }
 
     /**
      * @param bikes
@@ -31,18 +43,25 @@ class MultidayPricingPolicy implements PricingPolicy {
      * @return BigDecimal
      */
     public BigDecimal calculatePrice(Collection<Bike> bikes, DateRange duration) {
-        BigDecimal tot = new BigDecimal(0.0);
-        for (Bike b : bikes) {
-            BigDecimal d = dailyPrices.get(b.getType());
-            BigDecimal range = new BigDecimal(duration.toDays());
-            BigDecimal sum = d.multiply(range);
-            tot = tot.add(sum);
+        BigDecimal totalPerDay = new BigDecimal(0.0);
+
+        for (Bike bike : bikes) {
+            BigDecimal dailyPrice = this.dailyPrices.get(bike.getType());
+            totalPerDay = totalPerDay.add(dailyPrice);
         }
-        BigDecimal discount = discount(duration);
+
+        BigDecimal numDays = new BigDecimal(duration.toDays());
+
+        BigDecimal total = totalPerDay.multiply(numDays);
+
+        BigDecimal discount = this.discount(duration);
+
         BigDecimal one = new BigDecimal(1);
-        BigDecimal totdiscount = one.subtract(discount);
-        tot = tot.multiply(totdiscount);
-        return tot;
+
+        // total after discount = total * (1 - discount rate)
+        BigDecimal totalAfterDiscount = total.multiply(one.subtract(discount));
+
+        return totalAfterDiscount;
     }
 
     /**
@@ -50,14 +69,14 @@ class MultidayPricingPolicy implements PricingPolicy {
      * @return BigDecimal
      */
     public BigDecimal discount(DateRange duration) {
-        long days = duration.toDays();
-        if (days < 3)
-            return new BigDecimal(0.0);
-        else if (days > 2 && days < 7)
-            return new BigDecimal((double) 5 / 100);
-        else if (days > 6 && days < 14)
-            return new BigDecimal(0.01);
-        else
-            return new BigDecimal(0.15);
+        int numDays = (int) duration.toDays();
+        
+        Entry<Integer, BigDecimal> treeEntry = discountRates.floorEntry(numDays);
+        if (treeEntry != null && treeEntry.getValue() == null) {
+            treeEntry = discountRates.lowerEntry(numDays);
+        }
+                
+        return treeEntry == null ? new BigDecimal(0) : treeEntry.getValue();
+
     }
 }
