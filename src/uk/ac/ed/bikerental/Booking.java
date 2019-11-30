@@ -2,22 +2,32 @@ package uk.ac.ed.bikerental;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.Collection;
 import java.util.UUID;
 
 public class Booking implements Deliverable {
 
     private UUID id;
     private Shop store;
-    private Set<Bike> bikes;
+    private Collection<Bike> bikes;
     private DateRange dates;
     private BigDecimal deposit;
     private BookingStatus status;
     private String returnConditions;
     private PickupMethod pickupMethod;
 
+    public Booking(Invoice invoice) {
+        this.id = invoice.getUUID();
+        this.store = invoice.getShop();
+        this.bikes = invoice.getBikeList();
+        this.dates = invoice.getDates();
+        this.deposit = invoice.getDeposit();
+        this.status = BookingStatus.BOOKED;
+        this.pickupMethod = invoice.getPickupMethod();
+        this.returnConditions = "";
+    }
 
-    public Booking(Shop store, Set<Bike> bikes, DateRange dates,
+    public Booking(Shop store, Collection<Bike> bikes, DateRange dates,
                 BigDecimal deposit, PickupMethod pickupMethod) {
         this.id = UUID.randomUUID();
         this.store = store;
@@ -75,7 +85,7 @@ public class Booking implements Deliverable {
         return this.store;
     }
 
-    public Set<Bike> getBikes() {
+    public Collection<Bike> getBikes() {
         return this.bikes;
     }
 
