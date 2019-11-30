@@ -4,21 +4,20 @@ public class Location {
 
     /**
      * Location's postcode.
-    */
+     */
     private String postcode;
 
     /**
      * Location's address.
-    */
+     */
     private String address;
-
 
     /**
      * Location constructor.
      *
-     * @param  postcode Postcode (case insensitive)
-     * @param  address  Address
-     * @return          Location object.
+     * @param postcode Postcode (case insensitive)
+     * @param address  Address
+     * @return Location object.
      */
     public Location(String postcode, String address) {
         assert postcode.length() >= 6;
@@ -30,7 +29,7 @@ public class Location {
      * Location constructor.
      *
      * @param otherLocation Location object to check vicinity with
-     * @return              True if the locations are near each other.
+     * @return True if the locations are near each other.
      */
     public boolean isNearTo(Location otherLocation) {
         if (this.postcode.substring(0, 2).equals(otherLocation.postcode.substring(0, 2))) {

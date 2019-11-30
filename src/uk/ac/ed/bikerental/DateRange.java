@@ -78,7 +78,7 @@ public class DateRange {
     /**
      * Check if two DateRange(s) overlap.
      *
-     * @param  other
+     * @param other
      * @return True if they overlap, False otherwise
      */
     public Boolean overlaps(DateRange other) {
@@ -94,6 +94,7 @@ public class DateRange {
 
     /**
      * HashCode used to compare objects.
+     * 
      * @return hash
      */
     @Override

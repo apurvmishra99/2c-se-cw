@@ -19,22 +19,19 @@ public class Shop {
     private ValuationPolicy valuationPolicy;
     private PricingPolicy pricingPolicy;
 
-
-    
-    /** 
+    /**
      * @param address
      * @param hours
      * @param partners
      * @param bikes
      * @param depositRate
-     * @return 
+     * @return
      */
     public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate) {
         this(address, hours, partners, bikes, depositRate, new DefaultValuationPolicy(), new DefaultPricingPolicy());
     }
 
-    
-    /** 
+    /**
      * @param address
      * @param hours
      * @param partners
@@ -42,9 +39,10 @@ public class Shop {
      * @param depositRate
      * @param valuationPolicy
      * @param pricingPolicy
-     * @return 
+     * @return
      */
-    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate, ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
+    public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate,
+            ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
         this.id = UUID.randomUUID();
         this.address = address;
         this.hours = hours;
@@ -55,8 +53,7 @@ public class Shop {
         this.pricingPolicy = pricingPolicy;
     }
 
-    
-    /** 
+    /**
      * @param s
      * @return boolean
      */
@@ -64,16 +61,14 @@ public class Shop {
         return true;
     }
 
-    
-    /** 
+    /**
      * @param s
      */
     public void addPartner(Shop s) {
         this.partners.add(s);
     }
 
-    
-    /** 
+    /**
      * @param bikeType
      * @return Bike
      */
@@ -81,8 +76,7 @@ public class Shop {
         return this.addBike(bikeType, LocalDate.now(), "");
     }
 
-    
-    /** 
+    /**
      * @param bikeType
      * @param manifactureDate
      * @param notes
@@ -94,8 +88,7 @@ public class Shop {
         return bike;
     }
 
-    
-    /** 
+    /**
      * @param bikeList
      * @param startDate
      * @return BigDecimal
@@ -103,20 +96,15 @@ public class Shop {
     public BigDecimal generateDeposit(Collection<Bike> bikeList, LocalDate startDate) {
         BigDecimal ret = new BigDecimal(0);
         for (Bike b : bikeList) {
-            BigDecimal calc = valuationPolicy.calculateValue(b,startDate);
-            System.out.println("Calc value .............." + calc);
+            BigDecimal calc = valuationPolicy.calculateValue(b, startDate);
             ret = ret.add(calc);
         }
-        System.out.println("Ret........................"+ ret);
-        System.out.println("Dep rate...................." + this.depositRate);
         BigDecimal res = ret.multiply(this.depositRate);
-        System.out.println("Res........................."+ res);
         return res;
-        
+
     }
 
-    
-    /** 
+    /**
      * @param dates
      * @param bikes
      * @return Collection<Bike>
@@ -128,8 +116,7 @@ public class Shop {
             copiedBikes.put(bt, new Integer(bikes.get(bt)));
         }
         Collection<Bike> ret = new HashSet<Bike>();
-        // System.out.println("This shop has " + this.bikes + " bikes.");
-        for(Bike b : this.bikes) {
+        for (Bike b : this.bikes) {
             if (b.isAvailable(dates)) {
                 BikeType bt = b.getType();
                 int needed = copiedBikes.getOrDefault(bt, 0);
@@ -141,63 +128,55 @@ public class Shop {
             }
         }
         if (copiedBikes.isEmpty()) {
-            // System.out.println("Returning bikelist: " + ret);
             return ret;
         } else {
             return null;
         }
     }
 
-    
-    /** 
+    /**
      * @return UUID
      */
     public UUID getId() {
         return this.id;
     }
 
-    
-    /** 
+    /**
      * @return Location
      */
     public Location getAddress() {
         return this.address;
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     public String getHours() {
         return this.hours;
     }
 
-    
-    /** 
+    /**
      * @return BigDecimal
      */
     public BigDecimal getDepositRate() {
         return this.depositRate;
     }
 
-    
-    /** 
+    /**
      * @return Set<Shop>
      */
     public Set<Shop> getPartners() {
         return this.partners;
     }
 
-    
-    /** 
+    /**
      * @return Set<Bike>
      */
     public Set<Bike> getBikes() {
         return this.bikes;
     }
 
-    
-    /** 
+    /**
      * @return PricingPolicy
      */
     public PricingPolicy getPricingPolicy() {
@@ -206,12 +185,12 @@ public class Shop {
 
     // @Override
     // public String toString() {
-    //     return "{" +
-    //         " id='" + getId() + "'" +
-    //         ", address='" + getAddress() + "'" +
-    //         ", hours='" + getHours() + "'" +
-    //         ", partners='" + getPartners() + "'" +
-    //         ", bikes='" + getBikes() + "'" +
-    //         "}";
+    // return "{" +
+    // " id='" + getId() + "'" +
+    // ", address='" + getAddress() + "'" +
+    // ", hours='" + getHours() + "'" +
+    // ", partners='" + getPartners() + "'" +
+    // ", bikes='" + getBikes() + "'" +
+    // "}";
     // }
 }

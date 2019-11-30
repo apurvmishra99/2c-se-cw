@@ -16,10 +16,9 @@ public class Booking implements Deliverable {
     private String returnConditions;
     private PickupMethod pickupMethod;
 
-    
-    /** 
+    /**
      * @param invoice
-     * @return 
+     * @return
      */
     public Booking(Invoice invoice) {
         this.id = invoice.getUUID();
@@ -32,17 +31,15 @@ public class Booking implements Deliverable {
         this.returnConditions = "";
     }
 
-    
-    /** 
+    /**
      * @param store
      * @param bikes
      * @param dates
      * @param deposit
      * @param pickupMethod
-     * @return 
+     * @return
      */
-    public Booking(Shop store, Collection<Bike> bikes, DateRange dates,
-                BigDecimal deposit, PickupMethod pickupMethod) {
+    public Booking(Shop store, Collection<Bike> bikes, DateRange dates, BigDecimal deposit, PickupMethod pickupMethod) {
         this.id = UUID.randomUUID();
         this.store = store;
         this.bikes = bikes;
@@ -52,8 +49,7 @@ public class Booking implements Deliverable {
         this.pickupMethod = pickupMethod;
     }
 
-    
-    /** 
+    /**
      * @param bs
      */
     public void updateBikesStatus(BikeStatus bs) {
@@ -62,8 +58,7 @@ public class Booking implements Deliverable {
         }
     }
 
-    
-    /** 
+    /**
      * @param ls
      */
     public void updateBookingStatus(BookingStatus ls) {
@@ -77,15 +72,13 @@ public class Booking implements Deliverable {
         this.updateBikesStatus(bs);
     }
 
-    
-    /** 
+    /**
      * @param shop
      */
     public void returnBikes(Shop shop) {
         if (shop != this.store) {
-            DeliveryServiceFactory
-                    .getDeliveryService()
-                    .scheduleDelivery(this, this.store.getAddress(), shop.getAddress(), LocalDate.now());
+            DeliveryServiceFactory.getDeliveryService().scheduleDelivery(this, this.store.getAddress(),
+                    shop.getAddress(), LocalDate.now());
         } else {
             updateBookingStatus(BookingStatus.RETURNED);
         }
@@ -103,93 +96,77 @@ public class Booking implements Deliverable {
         }
     }
 
-    
-    /** 
+    /**
      * @return UUID
      */
     public UUID getId() {
         return this.id;
     }
 
-    
-    /** 
+    /**
      * @return Shop
      */
     public Shop getStore() {
         return this.store;
     }
 
-    
-    /** 
+    /**
      * @return Collection<Bike>
      */
     public Collection<Bike> getBikes() {
         return this.bikes;
     }
 
-    
-    /** 
+    /**
      * @return DateRange
      */
     public DateRange getDates() {
         return this.dates;
     }
 
-    
-    /** 
+    /**
      * @return BigDecimal
      */
     public BigDecimal getDeposit() {
         return this.deposit;
     }
 
-    
-    /** 
+    /**
      * @return BookingStatus
      */
     public BookingStatus getStatus() {
         return this.status;
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     public String getReturnConditions() {
         return this.returnConditions;
     }
 
-    
-    /** 
+    /**
      * @return PickupMethod
      */
     public PickupMethod getPickupMethod() {
         return this.pickupMethod;
     }
 
-    
-    /** 
+    /**
      * @param s
      */
     public void setReturnConditions(String s) {
         this.returnConditions = s;
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     @Override
     public String toString() {
-        return "{" +
-            " id='" + getId() + "'" +
-            ", store='" + getStore() + "'" +
-            ", bikes='" + getBikes() + "'" +
-            ", dates='" + getDates() + "'" +
-            ", deposit='" + getDeposit() + "'" +
-            ", status='" + getStatus() + "'" +
-            ", returnConditions='" + getReturnConditions() + "'" +
-            ", pickupMethod='" + getPickupMethod() + "'" +
-            "}";
+        return "{" + " id='" + getId() + "'" + ", store='" + getStore() + "'" + ", bikes='" + getBikes() + "'"
+                + ", dates='" + getDates() + "'" + ", deposit='" + getDeposit() + "'" + ", status='" + getStatus() + "'"
+                + ", returnConditions='" + getReturnConditions() + "'" + ", pickupMethod='" + getPickupMethod() + "'"
+                + "}";
     }
 }

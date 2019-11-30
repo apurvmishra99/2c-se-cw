@@ -11,46 +11,37 @@ import java.util.Map;
 public class MockDeliveryService implements DeliveryService {
     Map<LocalDate, Collection<Deliverable>> pickups;
     Deque<Deliverable> dropoffs;
-    
-    
-    /** 
-     * @return 
+
+    /**
+     * @return
      */
     public MockDeliveryService() {
-        this.pickups = new HashMap<LocalDate,
-                Collection<Deliverable>>();
+        this.pickups = new HashMap<LocalDate, Collection<Deliverable>>();
         this.dropoffs = new ArrayDeque<Deliverable>();
     }
 
-    
-    /** 
+    /**
      * @param deliverable
      * @param pickupLocation
      * @param dropoffLocation
      * @param pickupDate
      */
     @Override
-    public void scheduleDelivery(
-            Deliverable deliverable,
-            Location pickupLocation,
-            Location dropoffLocation,
+    public void scheduleDelivery(Deliverable deliverable, Location pickupLocation, Location dropoffLocation,
             LocalDate pickupDate) {
-        this.pickups.putIfAbsent(pickupDate,
-                new HashSet<Deliverable>());
+        this.pickups.putIfAbsent(pickupDate, new HashSet<Deliverable>());
         this.pickups.get(pickupDate).add(deliverable);
     }
-    
-    
-    /** 
+
+    /**
      * @param date
      * @return Collection<Deliverable>
      */
     public Collection<Deliverable> getPickupsOn(LocalDate date) {
         return this.pickups.get(date);
     }
-    
-    
-    /** 
+
+    /**
      * @param date
      */
     public void carryOutPickups(LocalDate date) {
@@ -70,8 +61,7 @@ public class MockDeliveryService implements DeliveryService {
         }
     }
 
-    
-    /** 
+    /**
      * @return Collection<Deliverable>
      */
     public Collection<Deliverable> getDropoffs() {

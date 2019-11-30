@@ -15,23 +15,21 @@ public class Bike {
     private BikeStatus status;
     private String notes;
 
-    
-    /** 
+    /**
      * @param type
      * @param owner
-     * @return 
+     * @return
      */
     public Bike(BikeType type, Shop owner) {
         this(type, owner, LocalDate.now(), "");
     }
 
-    
-    /** 
+    /**
      * @param type
      * @param owner
      * @param manufactureDate
      * @param notes
-     * @return 
+     * @return
      */
     public Bike(BikeType type, Shop owner, LocalDate manufactureDate, String notes) {
         this.type = type;
@@ -43,16 +41,14 @@ public class Bike {
         this.notes = notes;
     }
 
-    
-    /** 
+    /**
      * @param s
      */
     public void updateBikeStatus(BikeStatus s) {
         this.status = s;
     }
 
-    
-    /** 
+    /**
      * @param dateRange
      * @return boolean
      */
@@ -65,8 +61,7 @@ public class Bike {
         return false;
     }
 
-    
-    /** 
+    /**
      * @param dateRange
      * @return boolean
      */
@@ -80,74 +75,61 @@ public class Bike {
         return true;
     }
 
-    
-    /** 
+    /**
      * @return BikeType
      */
     public BikeType getType() {
         return this.type;
     }
 
-    
-    /** 
+    /**
      * @return UUID
      */
     public UUID getId() {
         return this.id;
     }
 
-    
-    /** 
+    /**
      * @return Shop
      */
     public Shop getOwner() {
         return this.owner;
     }
 
-    
-    /** 
+    /**
      * @return Set<DateRange>
      */
     public Set<DateRange> getBookingDates() {
         return this.bookingDates;
     }
 
-    
-    /** 
+    /**
      * @return LocalDate
      */
     public LocalDate getManufactureDate() {
         return this.manufactureDate;
     }
 
-    
-    /** 
+    /**
      * @return BikeStatus
      */
     public BikeStatus getStatus() {
         return this.status;
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     public String getNotes() {
         return this.notes;
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     @Override
     public String toString() {
-        return "{" +
-            " type='" + getType() + "'\n" +
-            ", id='" + getId() + "'\n" +
-            ", owner='" + getOwner() + "'\n" +
-            ", status='" + getStatus() + "'\n" +
-            ", notes='" + getNotes() + "'\n" +
-            "}\n";
+        return "{" + " type='" + getType() + "'\n" + ", id='" + getId() + "'\n" + ", owner='" + getOwner() + "'\n"
+                + ", status='" + getStatus() + "'\n" + ", notes='" + getNotes() + "'\n" + "}\n";
     }
 }

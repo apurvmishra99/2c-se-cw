@@ -7,8 +7,7 @@ class LocationTest {
 
     Location loc1, loc2, loc3, loc4;
 
-    
-    /** 
+    /**
      * @throws Exception
      */
     @BeforeEach

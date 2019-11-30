@@ -21,8 +21,7 @@ public class PricingPolicyTest {
     DateRange dateRange1;
     DateRange dateRange2;
 
-    
-    /** 
+    /**
      * @throws Exception
      */
     @BeforeEach

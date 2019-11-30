@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 public class SystemTests {
     Set<Shop> providers = new HashSet<>();
-    
+
     // BIKE RENTAL SHOPS
     Shop s1;
     Shop s2;
@@ -84,8 +84,7 @@ public class SystemTests {
     Location loc;
     HashMap<BikeType, Integer> bikesRequested;
 
-    
-    /** 
+    /**
      * @throws Exception
      */
     @BeforeEach
@@ -97,7 +96,6 @@ public class SystemTests {
         dateRange1 = new DateRange(LocalDate.of(2020, 1, 8), LocalDate.of(2020, 1, 9));
         dateRange2 = new DateRange(LocalDate.of(2020, 1, 7), LocalDate.of(2020, 2, 10));
         dateRange3 = new DateRange(LocalDate.of(2021, 1, 7), LocalDate.of(2021, 1, 10));
-        
 
         datePast = LocalDate.of(2017, 1, 7);
         dateNow = LocalDate.now();
@@ -174,7 +172,7 @@ public class SystemTests {
         expectedBikes1.add(b1);
         expectedBikes1.add(b3);
         Quote q1 = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1, expectedBikes1);
-        
+
         Collection<Bike> expectedBikes2 = new HashSet<Bike>();
         expectedBikes2.add(b7);
         expectedBikes2.add(b9);
@@ -183,15 +181,15 @@ public class SystemTests {
         Collection<Quote> expectedQuotes = new HashSet<Quote>();
         expectedQuotes.add(q1);
         expectedQuotes.add(q2);
-        
+
         // Call method Quote()
         Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);
         assertEquals(expectedQuotes, actualQuotes);
     }
+
     @Test
     void bookingAQuote() {
 
-        
         Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
         requestedBikes.put(bikeType1, 2);
         PickupMethod method = PickupMethod.DELIVERY;
@@ -199,13 +197,14 @@ public class SystemTests {
         Collection<Bike> expectedBikes1 = new HashSet<Bike>();
         expectedBikes1.add(b1);
         expectedBikes1.add(b3);
-    
+
         // Quote selected by the customer
-        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1, expectedBikes1);
-        
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1,
+                expectedBikes1);
+
         // Calling bookQuote()
         Invoice actualBooking = controller.bookQuote(selectedQuote, method);
-        
+
         // Expected Invoice()
         Invoice expectedInvoice = new Invoice(selectedQuote);
 
@@ -214,26 +213,27 @@ public class SystemTests {
 
     @Test
     public void returningBikes() {
-        
+
         Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
         requestedBikes.put(bikeType1, 2);
         PickupMethod method = PickupMethod.DELIVERY;
-        
+
         // Bikes user rented:
         Collection<Bike> expectedBikes1 = new HashSet<Bike>();
         expectedBikes1.add(b1);
         expectedBikes1.add(b3);
-    
+
         // Quote which was selected by the customer
-        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1, expectedBikes1);
-        
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1,
+                expectedBikes1);
+
         // Invoice which was generated
         Invoice actualBooking = controller.bookQuote(selectedQuote, method);
-        
+
         // Creating a booking object
         l1 = new Booking(actualBooking);
         id1 = l1.getId();
-        
+
         // Returning the booking
         controller.returnBooking(id1);
 
@@ -242,4 +242,3 @@ public class SystemTests {
         }
     }
 }
-

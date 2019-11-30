@@ -17,9 +17,8 @@ public class Controller {
     private Collection<BikeType> bikeTypes;
     private Map<UUID, Booking> bookings;
 
-    
-    /** 
-     * @return 
+    /**
+     * @return
      */
     public Controller() {
         this.action = CurrentAction.VIEW;
@@ -29,8 +28,7 @@ public class Controller {
         this.bookings = new HashMap<UUID, Booking>();
     }
 
-    
-    /** 
+    /**
      * @param bikes
      * @param dates
      * @param location
@@ -43,9 +41,11 @@ public class Controller {
                 continue;
             }
             Collection<Bike> bikeList = s.getBikes(dates, bikes);
-            if(bikeList != null) {
-                BigDecimal price = s.getPricingPolicy().calculatePrice(bikeList, dates).setScale(0, BigDecimal.ROUND_HALF_UP);
-                BigDecimal deposit = s.generateDeposit(bikeList, dates.getStart()).setScale(0, BigDecimal.ROUND_HALF_UP);
+            if (bikeList != null) {
+                BigDecimal price = s.getPricingPolicy().calculatePrice(bikeList, dates).setScale(0,
+                        BigDecimal.ROUND_HALF_UP);
+                BigDecimal deposit = s.generateDeposit(bikeList, dates.getStart()).setScale(0,
+                        BigDecimal.ROUND_HALF_UP);
                 Quote q = new Quote(price, deposit, dates, location, s, bikeList);
                 ret.add(q);
             }
@@ -53,8 +53,7 @@ public class Controller {
         return ret;
     }
 
-    
-    /** 
+    /**
      * @param quote
      * @param pickupMethod
      * @return Invoice
@@ -74,8 +73,7 @@ public class Controller {
         return invoice;
     }
 
-    
-    /** 
+    /**
      * @param b
      */
     public void returnBooking(UUID bookingID) {
@@ -93,17 +91,16 @@ public class Controller {
 
     // public void returnBooking(Invoice invoice) {
 
-    //     if (this.loggedInShop == null) {
-    //     throw new Error("User not logged in");
-    //     }
-    //     if (!this.bookings.contains(b)) {
-    //     throw new Error("Booking not found.");
-    //     }
-    //     b.returnBikes(this.loggedInShop);
+    // if (this.loggedInShop == null) {
+    // throw new Error("User not logged in");
+    // }
+    // if (!this.bookings.contains(b)) {
+    // throw new Error("Booking not found.");
+    // }
+    // b.returnBikes(this.loggedInShop);
     // }
 
-
-    /** 
+    /**
      * @param bikeType
      * @param dailyPrice
      */
@@ -114,8 +111,7 @@ public class Controller {
         this.loggedInShop.getPricingPolicy().setDailyRentalPrice(bikeType, dailyPrice);
     }
 
-    
-    /** 
+    /**
      * @param shop
      * @param password
      */
@@ -125,8 +121,7 @@ public class Controller {
         }
     }
 
-    
-    /** 
+    /**
      * @param bikeType
      * @return Bike
      */
@@ -134,8 +129,7 @@ public class Controller {
         return this.addBike(bikeType, LocalDate.now(), "");
     }
 
-    
-    /** 
+    /**
      * @param bikeType
      * @param manifactureDate
      * @param notes
@@ -149,8 +143,7 @@ public class Controller {
         return this.loggedInShop.addBike(bikeType, manifactureDate, notes);
     }
 
-    
-    /** 
+    /**
      * @param s
      * @param replacementValue
      * @param depreciationRate
@@ -164,8 +157,7 @@ public class Controller {
         return newBikeType;
     }
 
-    
-    /** 
+    /**
      * @param address
      * @param hours
      * @param partners
@@ -179,8 +171,7 @@ public class Controller {
         return shop;
     }
 
-    
-    /** 
+    /**
      * @param address
      * @param hours
      * @param partners
@@ -190,46 +181,40 @@ public class Controller {
      * @param pricingPolicy
      * @return Shop
      */
-    public Shop addShop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate, ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
+    public Shop addShop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate,
+            ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
         Shop shop = new Shop(address, hours, partners, bikes, depositRate, valuationPolicy, pricingPolicy);
         this.shops.add(shop);
         return shop;
     }
 
-    
-    /** 
+    /**
      * @return CurrentAction
      */
     public CurrentAction getAction() {
         return this.action;
     }
 
-    
-    /** 
+    /**
      * @return Shop
      */
     public Shop getLoggedInShop() {
         return this.loggedInShop;
     }
 
-    
-    /** 
+    /**
      * @return Collection<Shop>
      */
     public Collection<Shop> getShops() {
         return this.shops;
     }
 
-    
-    /** 
+    /**
      * @return String
      */
     @Override
     public String toString() {
-        return "{" +
-            " action='" + getAction() + "'" +
-            ", loginID='" + getLoggedInShop() + "'" +
-            ", shops='" + getShops() + "'" +
-            "}";
+        return "{" + " action='" + getAction() + "'" + ", loginID='" + getLoggedInShop() + "'" + ", shops='"
+                + getShops() + "'" + "}";
     }
 }

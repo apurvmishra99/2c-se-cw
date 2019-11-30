@@ -8,15 +8,14 @@ import java.math.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 
-class TestDoubleDecliningPolicy{
+class TestDoubleDecliningPolicy {
     Bike bike1, bike2;
     BikeType type1, type2;
     LocalDate date1, date2, date3;
     Shop s1, s2, s3;
     Location l1, l2, l3;
 
-    
-    /** 
+    /**
      * @throws Exception
      */
     @BeforeEach
@@ -37,7 +36,7 @@ class TestDoubleDecliningPolicy{
     }
 
     @Test
-    void calculateValue1(){
+    void calculateValue1() {
         DoubleDecliningPolicy pol1 = new DoubleDecliningPolicy();
         BigDecimal d = pol1.calculateValue(bike1, date3).stripTrailingZeros();
         MathContext m = new MathContext(2);
@@ -45,12 +44,12 @@ class TestDoubleDecliningPolicy{
         assertEquals(new BigDecimal(49.152).round(m), d);
     }
 
-   @Test
-   void calculateValue2(){
-    DoubleDecliningPolicy pol1 = new DoubleDecliningPolicy();
-    BigDecimal d = pol1.calculateValue(bike2, date1).stripTrailingZeros();
-    MathContext m = new MathContext(5);
-    d = d.round(m);
-    assertEquals(new BigDecimal(14.4).round(m),d);
-   } 
+    @Test
+    void calculateValue2() {
+        DoubleDecliningPolicy pol1 = new DoubleDecliningPolicy();
+        BigDecimal d = pol1.calculateValue(bike2, date1).stripTrailingZeros();
+        MathContext m = new MathContext(5);
+        d = d.round(m);
+        assertEquals(new BigDecimal(14.4).round(m), d);
+    }
 }

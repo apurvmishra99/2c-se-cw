@@ -10,19 +10,15 @@ import org.junit.jupiter.api.Test;
 class DateRangeTest {
     private DateRange dateRange1, dateRange2, dateRange3;
 
-    
-    /** 
+    /**
      * @throws Exception
      */
     @BeforeEach
     void setUp() throws Exception {
         // Setup resources before each test
-        this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 7),
-                LocalDate.of(2019, 1, 10));
-        this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 5),
-                LocalDate.of(2019, 1, 23));
-        this.dateRange3 = new DateRange(LocalDate.of(2015, 1, 7),
-                LocalDate.of(2018, 1, 10));
+        this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 7), LocalDate.of(2019, 1, 10));
+        this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 5), LocalDate.of(2019, 1, 23));
+        this.dateRange3 = new DateRange(LocalDate.of(2015, 1, 7), LocalDate.of(2018, 1, 10));
     }
 
     // Test toYears()
