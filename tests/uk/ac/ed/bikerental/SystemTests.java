@@ -319,8 +319,35 @@ public class SystemTests {
             System.out.println(b.getStatus());
             assertEquals(BikeStatus.ONLOAN, b.getStatus());
         }
+    }
 
-        // assertEquals(BookingStatus.ONLOAN, booking.getStatus());
+    /**
+     * Tries to book a quote twice;
+     * Simulates two customers receiving the same quote;
+     * @asserts Error is thrown as expected.
+     */
+    @Test
+    void bookingAQuote_concurrent() {
+
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+        PickupMethod method = PickupMethod.DELIVERY;
+        // Expected object:
+        Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
+        expectedBikeshop1.add(bike1);
+        expectedBikeshop1.add(bike3);
+
+        // Quote selected by the customer
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
+
+        // Calling bookQuote() once
+        controller.bookQuote(selectedQuote, method);
+
+        // Trying to book it twice
+        assertThrows(Error.class, () -> {
+            controller.bookQuote(selectedQuote, method);
+        });
     }
 
     /**
@@ -414,7 +441,7 @@ public class SystemTests {
         }
     }
 
-        /**
+    /**
      * Tries to return bikes;
      * User not logged in;
      * @assert Error is thrown
