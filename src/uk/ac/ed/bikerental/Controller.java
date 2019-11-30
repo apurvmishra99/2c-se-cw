@@ -101,14 +101,18 @@ public class Controller {
         this.loggedInShop.getPricingPolicy().setDailyRentalPrice(bikeType, dailyPrice);
     }
 
-    /**
-     * @param shop
-     * @param password
-     */
     public void login(Shop shop, String password) {
         if (shop.auth(password)) {
             this.loggedInShop = shop;
         }
+    }
+
+    /**
+     * @param shop
+     * @param password
+     */
+    public void logout() {
+        this.loggedInShop = null;
     }
 
     /**
