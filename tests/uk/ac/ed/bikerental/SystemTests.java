@@ -151,7 +151,7 @@ public class SystemTests {
 
         // Initialise Shop2 -- owns 2xType2 + 1xType4
         shop2 = controller.addShop(locEH2, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1),
-                new DoubleDecliningPolicy(), new DefaultPricingPolicy());
+                new DoubleDecliningPolicy(), new MultidayPricingPolicy());
         controller.login(shop2, "");
         bike4 = controller.addBike(bikeType2);
         bike5 = controller.addBike(bikeType4, dateNow, "We love SE");
@@ -225,6 +225,38 @@ public class SystemTests {
         Collection<Quote> expectedQuotes = new HashSet<Quote>();
         expectedQuotes.add(q1);
         expectedQuotes.add(q2);
+
+        // Call method Quote()
+        Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);
+        assertEquals(expectedQuotes, actualQuotes);
+    }
+
+    /**
+     * Tries to find quotes;
+     * Normal action, no edge cases;
+     * Covers location as a shop (3) has bikes available but not closeby
+     * @asserts Quotes is empty
+     */
+    @Test
+    void findingAQuote_noneAvailable() {
+        // User requires 2xType1
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 5);
+
+        // Expected object:
+        Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
+        expectedBikeshop1.add(bike1);
+        expectedBikeshop1.add(bike3);
+        Quote q1 = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
+
+        Collection<Bike> expectedBikeshop2 = new HashSet<Bike>();
+        expectedBikeshop2.add(bike7);
+        expectedBikeshop2.add(bike9);
+        Quote q2 = new Quote(new BigDecimal(80), new BigDecimal(200), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
+
+        Collection<Quote> expectedQuotes = new HashSet<Quote>();
 
         // Call method Quote()
         Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);

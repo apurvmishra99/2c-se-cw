@@ -83,12 +83,12 @@ public class Booking implements Deliverable {
     }
 
     public void onPickup() {
-        System.out.println("Being pickedup");
+        // System.out.println("Being pickedup");
         this.updateBikesStatus(BikeStatus.DELIVERY);
     }
 
     public void onDropoff() {
-        System.out.println("Being dropped off");
+        // System.out.println("Being dropped off");
         switch (this.status) {
         // Delivery to customer
         case BOOKED:
