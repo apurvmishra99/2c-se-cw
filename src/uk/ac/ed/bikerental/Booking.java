@@ -3,6 +3,7 @@ package uk.ac.ed.bikerental;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Booking implements Deliverable {
@@ -29,24 +30,11 @@ public class Booking implements Deliverable {
         this.status = BookingStatus.BOOKED;
         this.pickupMethod = invoice.getPickupMethod();
         this.returnConditions = "";
-    }
 
-    /**
-     * @param store
-     * @param bikes
-     * @param dates
-     * @param deposit
-     * @param pickupMethod
-     * @return
-     */
-    public Booking(Shop store, Collection<Bike> bikes, DateRange dates, BigDecimal deposit, PickupMethod pickupMethod) {
-        this.id = UUID.randomUUID();
-        this.store = store;
-        this.bikes = bikes;
-        this.dates = dates;
-        this.deposit = deposit;
-        this.status = BookingStatus.BOOKED;
-        this.pickupMethod = pickupMethod;
+        if (this.pickupMethod == PickupMethod.DELIVERY) {
+            DeliveryServiceFactory.getDeliveryService().scheduleDelivery(this, this.store.getAddress(),
+                    invoice.getLocation(), this.dates.getStart());
+        }
     }
 
     /**
@@ -65,8 +53,10 @@ public class Booking implements Deliverable {
         this.status = ls;
         BikeStatus bs = null;
         if (ls == BookingStatus.ONLOAN) {
+            System.out.println("Set as ONLOAN");
             bs = BikeStatus.ONLOAN;
         } else if (ls == BookingStatus.RETURNED) {
+            System.out.println("Set as AVAIL");
             bs = BikeStatus.AVAILABLE;
         }
         this.updateBikesStatus(bs);
@@ -89,10 +79,12 @@ public class Booking implements Deliverable {
     }
 
     public void onPickup() {
+        System.out.println("Being pickedup");
         this.updateBikesStatus(BikeStatus.DELIVERY);
     }
 
     public void onDropoff() {
+        System.out.println("Being dropped off");
         if (this.status == BookingStatus.ONLOAN) {
             this.updateBookingStatus(BookingStatus.RETURNED);
         } else {
@@ -161,6 +153,31 @@ public class Booking implements Deliverable {
      */
     public void setReturnConditions(String s) {
         this.returnConditions = s;
+    }
+
+    /**
+     * @param o
+     * @return boolean
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Booking)) {
+            return false;
+        }
+        Booking booking = (Booking) o;
+        return (this.store.equals(booking.store) && this.deposit.equals(booking.deposit)
+                && this.status.equals(booking.status) && this.bikes.size() == booking.bikes.size()
+                && this.pickupMethod.equals(booking.pickupMethod) && this.dates.equals(booking.dates));
+    }
+
+    /**
+     * @return int
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(store, bikes.size(), dates, deposit, status, pickupMethod);
     }
 
     /**

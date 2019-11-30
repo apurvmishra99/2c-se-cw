@@ -1,71 +1,83 @@
 package uk.ac.ed.bikerental;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class SystemTests {
-    Set<Shop> providers = new HashSet<>();
 
-    // BIKE RENTAL SHOPS
-    Shop s1;
-    Shop s2;
-    Shop s3;
-    Shop s4;
-    Shop s5;
+    MockDeliveryService deliveryService;
 
-    // BIKES
-    Bike b1;
-    Bike b2;
-    Bike b3;
-    Bike b4;
-    Bike b5;
-    Bike b6;
-    Bike b7;
-    Bike b8;
-    Bike b9;
-    Bike b10;
-    Bike b11;
-    Bike b12;
-    Bike b13;
+    // Utils definitions
+    LocalDate datePast;
+    LocalDate dateNow;
+    LocalDate dateFuture;
 
+    DateRange dateRange1;
+    DateRange dateRange2;
+    DateRange dateRange3;
+    DateRange dateRangePast;
+
+    Location customerLocation;
+    Location locEH1;
+    Location locEH2;
+    Location locCAG;
+    Location locEH3;
+    Location locEH4;
+
+    // System controller
+    Controller controller;
+
+    // BikeTypes
     BikeType bikeType1;
     BikeType bikeType2;
     BikeType bikeType3;
     BikeType bikeType4;
     BikeType bikeType5;
 
-    // COLLECTION OF BIKES
-    HashSet<Bike> bikes1;
-    HashSet<Bike> bikes2;
-    HashSet<Bike> bikes3;
-    HashSet<Bike> bikes4;
-    HashSet<Bike> bikes5;
+    // Bikes
+    Bike bike1;
+    Bike bike2;
+    Bike bike3;
+    Bike bike4;
+    Bike bike5;
+    Bike bike6;
+    Bike bike7;
+    Bike bike8;
+    Bike bike9;
+    Bike bike10;
+    Bike bike11;
+    Bike bike12;
+    Bike bike13;
 
-    // DATE RANGES DEFINITION
-    DateRange dateRange1;
-    DateRange dateRange2;
-    DateRange dateRange3;
+    // Bike rental shops
+    Shop shop1;
+    Shop shop2;
+    Shop shop3;
+    Shop shop4;
+    Shop shop5;
 
-    LocalDate datePast;
-    LocalDate dateNow;
-    LocalDate dateFuture;
+    // Set<Shop> providers = new HashSet<>();
 
-    Location customerLocation;
-    Location loc1;
-    Location loc2;
-    Location loc3;
-    Location loc4;
-    Location loc5;
+    // // COLLECTION OF BIKES
+    // HashSet<Bike> bikeshop1;
+    // HashSet<Bike> bikeshop2;
+    // HashSet<Bike> bikeshop3;
+    // HashSet<Bike> bikeshop4;
+    // HashSet<Bike> bikeshop5;
 
     // BOOKINGS
     Booking l1;
@@ -80,33 +92,36 @@ public class SystemTests {
     // EXPECTED QUOTES
     Set<Quote> expectedQuotes;
 
-    Controller controller;
     Location loc;
     HashMap<BikeType, Integer> bikesRequested;
 
     /**
-     * @throws Exception
+     * The state is reset before each test.
      */
     @BeforeEach
     void setUp() throws Exception {
-        // Mock delivery
         DeliveryServiceFactory.setupMockDeliveryService();
+        deliveryService = (MockDeliveryService) DeliveryServiceFactory.getDeliveryService();
+        // MockDeliveryService deliveryService = (MockDeliveryService) deliveryService;
 
         // Dates
-        dateRange1 = new DateRange(LocalDate.of(2020, 1, 8), LocalDate.of(2020, 1, 9));
-        dateRange2 = new DateRange(LocalDate.of(2020, 1, 7), LocalDate.of(2020, 2, 10));
-        dateRange3 = new DateRange(LocalDate.of(2021, 1, 7), LocalDate.of(2021, 1, 10));
-
         datePast = LocalDate.of(2017, 1, 7);
         dateNow = LocalDate.now();
         dateFuture = LocalDate.of(2022, 5, 1);
 
+        // DateRanges
+        dateRange1 = new DateRange(LocalDate.of(2020, 1, 8), LocalDate.of(2020, 1, 9));
+        dateRange2 = new DateRange(LocalDate.of(2020, 1, 7), LocalDate.of(2020, 2, 10));
+        dateRange3 = new DateRange(LocalDate.of(2021, 1, 7), LocalDate.of(2021, 1, 10));
+        dateRangePast = new DateRange(datePast, dateFuture);
+
+        // Locations
         customerLocation = new Location("EH8 8KK", "100111 Informatics Forum");
-        loc1 = new Location("EH7 4EG", "38 Haddington Place");
-        loc2 = new Location("EH3 9LW", "15 Leven Terrace");
-        loc3 = new Location("CA3 1LW", "Cagliariiii");
-        loc4 = new Location("eh1 1jh", "Somewhere in Edi");
-        loc5 = new Location("eh4 5th", "30 Collegiate, Edinburgh");
+        locEH1 = new Location("EH7 4EG", "38 Haddington Place");
+        locEH2 = new Location("EH3 9LW", "15 Leven Terrace");
+        locCAG = new Location("CA3 1LW", "Cagliariiii");
+        locEH3 = new Location("eh1 1jh", "Somewhere in Edi");
+        locEH4 = new Location("eh4 5th", "30 Collegiate, Edinburgh");
 
         controller = new Controller();
 
@@ -118,65 +133,74 @@ public class SystemTests {
         bikeType5 = controller.addBikeType("BTT", new BigDecimal(40), new BigDecimal(0.75));
 
         // Initialise Shop2 -- owns 2xType1 + 1xType2
-        s1 = controller.addShop(loc1, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.4),
+        shop1 = controller.addShop(locEH1, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.4),
                 new LinearDepreciationPolicy(), new MultidayPricingPolicy());
-        controller.login(s1, "");
-        b1 = controller.addBike(bikeType1);
-        b2 = controller.addBike(bikeType2, datePast, "We love SE");
-        b3 = controller.addBike(bikeType1);
+        controller.login(shop1, "");
+        bike1 = controller.addBike(bikeType1);
+        bike2 = controller.addBike(bikeType2, datePast, "We love SE");
+        bike3 = controller.addBike(bikeType1);
         controller.setDailyPrice(bikeType1, new BigDecimal(10));
         controller.setDailyPrice(bikeType2, new BigDecimal(20));
 
         // Initialise Shop2 -- owns 2xType2 + 1xType4
-        s2 = controller.addShop(loc2, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1),
+        shop2 = controller.addShop(locEH2, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1),
                 new DoubleDecliningPolicy(), new DefaultPricingPolicy());
-        controller.login(s2, "");
-        b4 = controller.addBike(bikeType2);
-        b5 = controller.addBike(bikeType4, dateNow, "We love SE");
-        b6 = controller.addBike(bikeType2);
+        controller.login(shop2, "");
+        bike4 = controller.addBike(bikeType2);
+        bike5 = controller.addBike(bikeType4, dateNow, "We love SE");
+        bike6 = controller.addBike(bikeType2);
         controller.setDailyPrice(bikeType2, new BigDecimal(20));
         controller.setDailyPrice(bikeType4, new BigDecimal(30));
 
         // Initialise Shop3 -- owns 2xType1 + 1xType4
-        s3 = controller.addShop(loc3, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.3));
-        controller.login(s3, "");
-        b7 = controller.addBike(bikeType1);
-        b8 = controller.addBike(bikeType4);
-        b9 = controller.addBike(bikeType1);
+        shop3 = controller.addShop(locCAG, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.3));
+        controller.login(shop3, "");
+        bike7 = controller.addBike(bikeType1);
+        bike8 = controller.addBike(bikeType4);
+        bike9 = controller.addBike(bikeType1);
         controller.setDailyPrice(bikeType1, new BigDecimal(30));
         controller.setDailyPrice(bikeType4, new BigDecimal(40));
 
         // Initialise Shop4 -- owns 3xType1
-        s4 = controller.addShop(loc4, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.2));
-        controller.login(s4, "");
-        b10 = controller.addBike(bikeType1);
-        b11 = controller.addBike(bikeType1);
-        b12 = controller.addBike(bikeType1);
+        shop4 = controller.addShop(locEH3, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.2));
+        controller.login(shop4, "");
+        bike10 = controller.addBike(bikeType1);
+        bike11 = controller.addBike(bikeType1);
+        bike12 = controller.addBike(bikeType1);
         controller.setDailyPrice(bikeType1, new BigDecimal(40));
 
-        s1.addPartner(s2);
-        s2.addPartner(s1);
-        s4.addPartner(s5);
-        // s5.addPartner(s4);
+        // Setup partnerships
+        shop1.addPartner(shop2);
+        shop2.addPartner(shop1);
+        shop4.addPartner(shop5);
+
+        // Logout to correctly test security
+        controller.logout();
     }
 
+    /**
+     * Tries to find quotes; Normal action, no edge cases;
+     * 
+     * @asserts Quotes returned are as expected,
+     */
     @Test
     void findingAQuote() {
-
-        // First user requires 2xType1
+        // User requires 2xType1
         Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
         requestedBikes.put(bikeType1, 2);
 
         // Expected object:
-        Collection<Bike> expectedBikes1 = new HashSet<Bike>();
-        expectedBikes1.add(b1);
-        expectedBikes1.add(b3);
-        Quote q1 = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1, expectedBikes1);
+        Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
+        expectedBikeshop1.add(bike1);
+        expectedBikeshop1.add(bike3);
+        Quote q1 = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
 
-        Collection<Bike> expectedBikes2 = new HashSet<Bike>();
-        expectedBikes2.add(b7);
-        expectedBikes2.add(b9);
-        Quote q2 = new Quote(new BigDecimal(80), new BigDecimal(200), dateRange1, customerLocation, s1, expectedBikes1);
+        Collection<Bike> expectedBikeshop2 = new HashSet<Bike>();
+        expectedBikeshop2.add(bike7);
+        expectedBikeshop2.add(bike9);
+        Quote q2 = new Quote(new BigDecimal(80), new BigDecimal(200), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
 
         Collection<Quote> expectedQuotes = new HashSet<Quote>();
         expectedQuotes.add(q1);
@@ -187,6 +211,12 @@ public class SystemTests {
         assertEquals(expectedQuotes, actualQuotes);
     }
 
+    /**
+     * Tries to book an available quote; Normal action, no edge cases;
+     * 
+     * @asserts Booking object is populated as expected,
+     * @asserts Bikes are not available during those dates.
+     */
     @Test
     void bookingAQuote() {
 
@@ -194,13 +224,13 @@ public class SystemTests {
         requestedBikes.put(bikeType1, 2);
         PickupMethod method = PickupMethod.DELIVERY;
         // Expected object:
-        Collection<Bike> expectedBikes1 = new HashSet<Bike>();
-        expectedBikes1.add(b1);
-        expectedBikes1.add(b3);
+        Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
+        expectedBikeshop1.add(bike1);
+        expectedBikeshop1.add(bike3);
 
         // Quote selected by the customer
-        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1,
-                expectedBikes1);
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
 
         // Calling bookQuote()
         Invoice actualBooking = controller.bookQuote(selectedQuote, method);
@@ -209,23 +239,34 @@ public class SystemTests {
         Invoice expectedInvoice = new Invoice(selectedQuote);
 
         assertEquals(actualBooking, expectedInvoice);
+
+        // Booking object to access bikes
+        Booking l = new Booking(actualBooking);
+        for (Bike b : l.getBikes()) {
+            assertFalse(b.isAvailable(dateRange1));
+        }
     }
 
+    /**
+     * Tries to return bikes to the same provider;
+     * Normal action, no edge cases;
+     * @assert Bikes are correctly setup available
+     */
     @Test
-    public void returningBikes() {
-
+    public void returningBikes_sameShop() {
+        controller.login(shop1, "");
         Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
         requestedBikes.put(bikeType1, 2);
         PickupMethod method = PickupMethod.DELIVERY;
 
         // Bikes user rented:
-        Collection<Bike> expectedBikes1 = new HashSet<Bike>();
-        expectedBikes1.add(b1);
-        expectedBikes1.add(b3);
+        Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
+        expectedBikeshop1.add(bike1);
+        expectedBikeshop1.add(bike3);
 
         // Quote which was selected by the customer
-        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1,
-                expectedBikes1);
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
 
         // Invoice which was generated
         Invoice actualBooking = controller.bookQuote(selectedQuote, method);
@@ -238,6 +279,57 @@ public class SystemTests {
         controller.returnBooking(id1);
 
         for (Bike b : l1.getBikes()) {
+            assertEquals(b.getStatus(), BikeStatus.AVAILABLE);
+        }
+    }
+
+    /**
+     * Tries to return bikes to a partnered provider;
+     * Normal action, no edge cases;
+     * @assert Bikes are correctly setup available
+     * @assert Delivery is as expected
+     */
+    @Test
+    public void returningBikes_partneredShop() {
+        controller.login(shop2, "");
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+        PickupMethod method = PickupMethod.DELIVERY;
+
+        // Bikes user rented:
+        Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
+        expectedBikeshop1.add(bike1);
+        expectedBikeshop1.add(bike3);
+
+        // Quote which was selected by the customer
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+                expectedBikeshop1);
+
+        // Invoice which was generated
+        Invoice actualBooking = controller.bookQuote(selectedQuote, method);
+
+        // Creating a booking object
+        l1 = new Booking(actualBooking);
+        id1 = l1.getId();
+
+        // Returning the booking
+        controller.returnBooking(id1);
+
+        // Test delivery
+        // LocalDate deliveryDate = actualBooking.getDates().getStart();
+        Collection<Deliverable> pickups;
+        pickups = deliveryService.getPickupsOn(LocalDate.now());
+        System.out.println(pickups);
+        assertTrue(Collections.frequency(pickups, l1) == 1);
+
+        deliveryService.carryOutPickups(LocalDate.now());
+        for (Bike b : l1.getBikes()) {
+            assertEquals(b.getStatus(), BikeStatus.DELIVERY);
+        }
+
+        deliveryService.carryOutDropoffs();
+        for (Bike b : l1.getBikes()) {
+            System.out.println(b.getStatus());
             assertEquals(b.getStatus(), BikeStatus.AVAILABLE);
         }
     }

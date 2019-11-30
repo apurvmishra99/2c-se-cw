@@ -114,7 +114,7 @@ public class Quote {
     /**
      * @return Location
      */
-    public Location getLoc() {
+    public Location getLocation() {
         return this.loc;
     }
 
@@ -162,7 +162,7 @@ public class Quote {
     @Override
     public String toString() {
         return "{" + " id='" + getId() + "'\n" + ", price='" + getPrice() + "'\n" + ", deposit='" + getDeposit() + "'\n"
-                + ", dates='" + getDates() + "'\n" + ", loc='" + getLoc() + "'\n" + ", shop='" + getShop() + "'\n"
+                + ", dates='" + getDates() + "'\n" + ", loc='" + getLocation() + "'\n" + ", shop='" + getShop() + "'\n"
                 + ", bikeList='" + getBikeList() + "'\n" + "}\n";
     }
 }

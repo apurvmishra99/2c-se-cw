@@ -57,13 +57,18 @@ public class Controller {
      * @param  quote
      * @param  pickupMethod
      * @return Invoice
-     * @throws Error if the quote is not available anymore.
+     * @throws IllegalArgumentException if the quote is not available anymore.
      */
     public Invoice bookQuote(Quote quote, PickupMethod pickupMethod) {
+        // check if bikes still available
         for (Bike b : quote.getBikeList()) {
             if (!b.isAvailable(quote.getDates())) {
-                throw new Error("Quote expired.");
+                throw new IllegalArgumentException("Quote expired.");
             }
+        }
+        // Actually book the bikes
+        for (Bike b : quote.getBikeList()) {
+            assert b.book(quote.getDates());
         }
         Invoice invoice = quote.generateInvoice();
         invoice.setPickupMethod(pickupMethod);
@@ -76,15 +81,15 @@ public class Controller {
 
     /**
      * @param b
-     * @throws Error if User not logged in
-     * @throws Error if Booking not found
+     * @throws SecurityException if User not logged in
+     * @throws IllegalArgumentException if Booking not found
      */
     public void returnBooking(UUID bookingID) {
         if (this.loggedInShop == null) {
-            throw new Error("User not logged in");
+            throw new SecurityException("User not logged in");
         }
         if (!this.bookings.containsKey(bookingID)) {
-            throw new Error("Booking not found.");
+            throw new IllegalArgumentException("Booking not found.");
         }
         this.bookings.get(bookingID).returnBikes(this.loggedInShop);
     }
@@ -92,11 +97,11 @@ public class Controller {
     /**
      * @param bikeType
      * @param dailyPrice
-     * @throws Error if User not logged in
+     * @throws SecurityException if User not logged in
      */
     public void setDailyPrice(BikeType bikeType, BigDecimal dailyPrice) {
         if (this.loggedInShop == null) {
-            throw new Error("User not logged in");
+            throw new SecurityException("User not logged in");
         }
         this.loggedInShop.getPricingPolicy().setDailyRentalPrice(bikeType, dailyPrice);
     }
@@ -128,12 +133,12 @@ public class Controller {
      * @param manifactureDate
      * @param notes
      * @return Bike
-     * @throws Error if User not logged in
+     * @throws SecurityException if User not logged in
      */
     public Bike addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
         assert (manifactureDate.compareTo(LocalDate.now()) <= 0);
         if (this.loggedInShop == null) {
-            throw new Error("User not logged in");
+            throw new SecurityException("User not logged in");
         }
         return this.loggedInShop.addBike(bikeType, manifactureDate, notes);
     }
@@ -143,12 +148,12 @@ public class Controller {
      * @param replacementValue
      * @param depreciationRate
      * @return BikeType
-     * @throws Error if BikeType is already registered
+     * @throws IllegalArgumentException if BikeType is already registered
      */
     public BikeType addBikeType(String s, BigDecimal replacementValue, BigDecimal depreciationRate) {
         BikeType newBikeType = new BikeType(s, replacementValue, depreciationRate);
         if (!this.bikeTypes.add(newBikeType)) {
-            throw new Error("BikeType already registered");
+            throw new IllegalArgumentException("BikeType already registered");
         }
         return newBikeType;
     }

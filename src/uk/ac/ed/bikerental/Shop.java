@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -191,14 +192,26 @@ public class Shop {
         return this.pricingPolicy;
     }
 
-    // @Override
-    // public String toString() {
-    // return "{" +
-    // " id='" + getId() + "'" +
-    // ", address='" + getAddress() + "'" +
-    // ", hours='" + getHours() + "'" +
-    // ", partners='" + getPartners() + "'" +
-    // ", bikes='" + getBikes() + "'" +
-    // "}";
-    // }
+    /**
+     * @param o
+     * @return boolean
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Shop)) {
+            return false;
+        }
+        Shop booking = (Shop) o;
+        return (this.address.equals(booking.address) && this.hours.equals(booking.hours));
+    }
+
+    /**
+     * @return int
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(address, hours);
+    }
 }
