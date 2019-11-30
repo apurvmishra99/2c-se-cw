@@ -33,8 +33,12 @@ public class Controller {
      * @param dates
      * @param location
      * @return Set<Quote>
+     * @throws Error if dateRange is in the past
      */
     public Set<Quote> getQuotes(Map<BikeType, Integer> bikes, DateRange dates, Location location) {
+        if (!dates.isInFuture()) {
+            throw new Error("Cannot get a quote in the past");
+        }
         Set<Quote> ret = new HashSet<Quote>();
         for (Shop s : this.shops) {
             if (!s.getAddress().isNearTo(location)) {

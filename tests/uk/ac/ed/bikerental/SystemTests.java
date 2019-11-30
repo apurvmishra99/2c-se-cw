@@ -198,12 +198,13 @@ public class SystemTests {
     }
 
     /**
-     * Tries to find quotes; Normal action, no edge cases;
-     * 
+     * Tries to find quotes;
+     * Normal action, no edge cases;
+     * Covers location as a shop (3) has bikes available but not closeby
      * @asserts Quotes returned are as expected,
      */
     @Test
-    void findingAQuote() {
+    void findingAQuote_normal() {
         // User requires 2xType1
         Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
         requestedBikes.put(bikeType1, 2);
@@ -228,6 +229,23 @@ public class SystemTests {
         // Call method Quote()
         Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);
         assertEquals(expectedQuotes, actualQuotes);
+    }
+
+    /**
+     * Tries to find quotes;
+     * @asserts Error is thrown as expected,
+     */
+    @Test
+    void findingAQuote_pastDate() {
+        // User requires 2xType1
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+
+        // Call method Quote() with a past DateRange
+        // Trying to book it twice
+        assertThrows(Error.class, () -> {
+            controller.getQuotes(requestedBikes, dateRangePast, customerLocation);
+        });
     }
 
     /**
@@ -305,7 +323,6 @@ public class SystemTests {
         LocalDate deliveryDate = actualBooking.getDates().getStart();
         Collection<Deliverable> pickups;
         pickups = deliveryService.getPickupsOn(deliveryDate);
-        System.out.println(pickups);
         assertTrue(Collections.frequency(pickups, booking) == 1);
 
         // DELIVERY status is same for delivery to customer or shop
@@ -316,7 +333,6 @@ public class SystemTests {
 
         deliveryService.carryOutDropoffs();
         for (Bike b : booking.getBikes()) {
-            System.out.println(b.getStatus());
             assertEquals(BikeStatus.ONLOAN, b.getStatus());
         }
     }
@@ -426,7 +442,6 @@ public class SystemTests {
         // LocalDate deliveryDate = actualBooking.getDates().getStart();
         Collection<Deliverable> pickups;
         pickups = deliveryService.getPickupsOn(LocalDate.now());
-        System.out.println(pickups);
 
         // DELIVERY status is same for delivery to customer or shop
         deliveryService.carryOutPickups(LocalDate.now());
@@ -436,7 +451,6 @@ public class SystemTests {
 
         deliveryService.carryOutDropoffs();
         for (Bike b : l1.getBikes()) {
-            System.out.println(b.getStatus());
             assertEquals(BikeStatus.AVAILABLE, b.getStatus());
         }
     }
