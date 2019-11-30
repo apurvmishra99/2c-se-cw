@@ -486,7 +486,8 @@ public class SystemTests {
      * Tries to return bikes to a partnered provider;
      * Normal action, no edge cases;
      * @assert Bikes are correctly setup available
-     * @assert Delivery is as expected
+     * @assert Delivery is picked up as expected
+     * @assert Delivery is dropped off as expected
      */
     @Test
     public void returningBikes_partneredShop() {
@@ -517,9 +518,6 @@ public class SystemTests {
         controller.returnBooking(id1);
 
         // Test delivery
-        // LocalDate deliveryDate = actualBooking.getDates().getStart();
-        Collection<Deliverable> pickups;
-        pickups = deliveryService.getPickupsOn(LocalDate.now());
 
         // DELIVERY status is same for delivery to customer or shop
         deliveryService.carryOutPickups(LocalDate.now());

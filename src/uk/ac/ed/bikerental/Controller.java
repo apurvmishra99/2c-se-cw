@@ -84,7 +84,7 @@ public class Controller {
     }
 
     /**
-     * 
+     * Called by shop when a customer collects a booking
      * @param bookingID
      */
     public void collectBooking(UUID bookingID) {
