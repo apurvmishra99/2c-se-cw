@@ -32,7 +32,7 @@ class TestLinearDepreciationPolicy {
         this.type2 = new BikeType("Mountain", new BigDecimal(90), new BigDecimal(0.3));
         this.date1 = LocalDate.of(2022, 3, 25);
         this.date2 = LocalDate.of(2021, 9, 15);
-        this.date3 = LocalDate.of(2023, 11, 30);
+        this.date3 = LocalDate.of(2023, 11, 25);
         this.s1 = new Shop(l1, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1),
                 new LinearDepreciationPolicy());
         this.bike1 = new Bike(this.type1, this.s1);
@@ -49,7 +49,7 @@ class TestLinearDepreciationPolicy {
         MathContext m = new MathContext(2);
         d = d.round(m);
         // compare what i get with what i am supposed to get
-        assertEquals(new BigDecimal(72).stripTrailingZeros(), d);
+        assertEquals(new BigDecimal(84).stripTrailingZeros(), d);
     }
 
     // Testing with a different bike object
