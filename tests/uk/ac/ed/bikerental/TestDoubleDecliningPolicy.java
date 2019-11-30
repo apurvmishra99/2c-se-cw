@@ -30,7 +30,7 @@ class TestDoubleDecliningPolicy {
         this.date2 = LocalDate.of(2021, 9, 15);
         this.date3 = LocalDate.of(2023, 11, 30);
         this.s1 = new Shop(l1, "", new HashSet<Shop>(), new HashSet<Bike>(), new BigDecimal(0.1),
-                new DoubleDecliningPolicy(), new DefaultPricingPolicy());
+                new DoubleDecliningPolicy());
         this.bike1 = new Bike(this.type1, this.s1);
         this.bike2 = new Bike(this.type2, this.s1);
     }
@@ -39,9 +39,9 @@ class TestDoubleDecliningPolicy {
     void calculateValue1() {
         DoubleDecliningPolicy pol1 = new DoubleDecliningPolicy();
         BigDecimal d = pol1.calculateValue(bike1, date3).stripTrailingZeros();
-        MathContext m = new MathContext(2);
+        MathContext m = new MathContext(5);
         d = d.round(m);
-        assertEquals(new BigDecimal(49.152).round(m), d);
+        assertEquals(new BigDecimal(61.440).round(m), d);
     }
 
     @Test

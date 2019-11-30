@@ -27,7 +27,7 @@ class MultidayPricingPolicy implements PricingPolicy {
     public BigDecimal getDailyPrice(BikeType bikeType) {
         return dailyPrices.get(bikeType);
     }
-    
+
     /**
      * 
      * @param fromDay
