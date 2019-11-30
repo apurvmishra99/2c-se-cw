@@ -7,6 +7,10 @@ class LocationTest {
 
     Location loc1, loc2, loc3, loc4;
 
+    
+    /** 
+     * @throws Exception
+     */
     @BeforeEach
     void setUp() throws Exception {
         loc1 = new Location("EH7 4EG", "38 Haddington Place");

@@ -10,14 +10,30 @@ class MultidayPricingPolicy implements PricingPolicy {
 
     private Map<BikeType, BigDecimal> dailyPrices = new HashMap<BikeType, BigDecimal>();
 
+    
+    /** 
+     * @param bikeType
+     * @param dailyPrice
+     */
     public void setDailyRentalPrice(BikeType bikeType, BigDecimal dailyPrice){
         dailyPrices.put(bikeType, dailyPrice);
     }
 
+    
+    /** 
+     * @param bikeType
+     * @return BigDecimal
+     */
     public BigDecimal getDailyPrice(BikeType bikeType) {
         return dailyPrices.get(bikeType);
     }
 
+    
+    /** 
+     * @param bikes
+     * @param duration
+     * @return BigDecimal
+     */
     public BigDecimal calculatePrice(Collection<Bike> bikes, DateRange duration){
         BigDecimal tot = new BigDecimal(0.0);
         for(Bike b : bikes){
@@ -33,6 +49,11 @@ class MultidayPricingPolicy implements PricingPolicy {
         return tot;
     }
 
+    
+    /** 
+     * @param duration
+     * @return BigDecimal
+     */
     public BigDecimal discount(DateRange duration){
         long days = duration.toDays();
         if(days<3) return new BigDecimal(0.0);

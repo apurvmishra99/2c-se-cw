@@ -12,12 +12,23 @@ public class MockDeliveryService implements DeliveryService {
     Map<LocalDate, Collection<Deliverable>> pickups;
     Deque<Deliverable> dropoffs;
     
+    
+    /** 
+     * @return 
+     */
     public MockDeliveryService() {
         this.pickups = new HashMap<LocalDate,
                 Collection<Deliverable>>();
         this.dropoffs = new ArrayDeque<Deliverable>();
     }
 
+    
+    /** 
+     * @param deliverable
+     * @param pickupLocation
+     * @param dropoffLocation
+     * @param pickupDate
+     */
     @Override
     public void scheduleDelivery(
             Deliverable deliverable,
@@ -29,10 +40,19 @@ public class MockDeliveryService implements DeliveryService {
         this.pickups.get(pickupDate).add(deliverable);
     }
     
+    
+    /** 
+     * @param date
+     * @return Collection<Deliverable>
+     */
     public Collection<Deliverable> getPickupsOn(LocalDate date) {
         return this.pickups.get(date);
     }
     
+    
+    /** 
+     * @param date
+     */
     public void carryOutPickups(LocalDate date) {
         if (this.pickups.containsKey(date)) {
             for (Deliverable d : this.pickups.get(date)) {
@@ -50,6 +70,10 @@ public class MockDeliveryService implements DeliveryService {
         }
     }
 
+    
+    /** 
+     * @return Collection<Deliverable>
+     */
     public Collection<Deliverable> getDropoffs() {
         return this.dropoffs;
     }

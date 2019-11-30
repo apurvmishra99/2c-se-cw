@@ -14,6 +14,10 @@ class TestDoubleDecliningPolicy{
     private LocalDate date1,date2,date3;
     private Shop s1, s2;
 
+    
+    /** 
+     * @throws Exception
+     */
     @BeforeEach
     void setUp() throws Exception {
         // Setup resources before each test

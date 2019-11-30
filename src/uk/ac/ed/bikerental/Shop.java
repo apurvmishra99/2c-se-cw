@@ -20,10 +20,30 @@ public class Shop {
     private PricingPolicy pricingPolicy;
 
 
+    
+    /** 
+     * @param address
+     * @param hours
+     * @param partners
+     * @param bikes
+     * @param depositRate
+     * @return 
+     */
     public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate) {
         this(address, hours, partners, bikes, depositRate, new DefaultValuationPolicy(), new DefaultPricingPolicy());
     }
 
+    
+    /** 
+     * @param address
+     * @param hours
+     * @param partners
+     * @param bikes
+     * @param depositRate
+     * @param valuationPolicy
+     * @param pricingPolicy
+     * @return 
+     */
     public Shop(Location address, String hours, Set<Shop> partners, Set<Bike> bikes, BigDecimal depositRate, ValuationPolicy valuationPolicy, PricingPolicy pricingPolicy) {
         this.id = UUID.randomUUID();
         this.address = address;
@@ -35,24 +55,51 @@ public class Shop {
         this.pricingPolicy = pricingPolicy;
     }
 
+    
+    /** 
+     * @param s
+     * @return boolean
+     */
     public boolean auth(String s) {
         return true;
     }
 
+    
+    /** 
+     * @param s
+     */
     public void addPartner(Shop s) {
         this.partners.add(s);
     }
 
+    
+    /** 
+     * @param bikeType
+     * @return Bike
+     */
     public Bike addBike(BikeType bikeType) {
         return this.addBike(bikeType, LocalDate.now(), "");
     }
 
+    
+    /** 
+     * @param bikeType
+     * @param manifactureDate
+     * @param notes
+     * @return Bike
+     */
     public Bike addBike(BikeType bikeType, LocalDate manifactureDate, String notes) {
         Bike bike = new Bike(bikeType, this, manifactureDate, notes);
         this.bikes.add(bike);
         return bike;
     }
 
+    
+    /** 
+     * @param bikeList
+     * @param startDate
+     * @return BigDecimal
+     */
     public BigDecimal generateDeposit(Collection<Bike> bikeList, LocalDate startDate) {
         BigDecimal ret = new BigDecimal(0);
         for (Bike b : bikeList) {
@@ -68,6 +115,12 @@ public class Shop {
         
     }
 
+    
+    /** 
+     * @param dates
+     * @param bikes
+     * @return Collection<Bike>
+     */
     public Collection<Bike> getBikes(DateRange dates, Map<BikeType, Integer> bikes) {
         assert (dates.isInFuture());
         Map<BikeType, Integer> copiedBikes = new HashMap<BikeType, Integer>();
@@ -95,30 +148,58 @@ public class Shop {
         }
     }
 
+    
+    /** 
+     * @return UUID
+     */
     public UUID getId() {
         return this.id;
     }
 
+    
+    /** 
+     * @return Location
+     */
     public Location getAddress() {
         return this.address;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getHours() {
         return this.hours;
     }
 
+    
+    /** 
+     * @return BigDecimal
+     */
     public BigDecimal getDepositRate() {
         return this.depositRate;
     }
 
+    
+    /** 
+     * @return Set<Shop>
+     */
     public Set<Shop> getPartners() {
         return this.partners;
     }
 
+    
+    /** 
+     * @return Set<Bike>
+     */
     public Set<Bike> getBikes() {
         return this.bikes;
     }
 
+    
+    /** 
+     * @return PricingPolicy
+     */
     public PricingPolicy getPricingPolicy() {
         return this.pricingPolicy;
     }

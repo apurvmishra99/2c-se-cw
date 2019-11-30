@@ -4,6 +4,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class LinearDepreciationPolicy implements ValuationPolicy {
+    
+    /** 
+     * @param bike
+     * @param date
+     * @return BigDecimal
+     */
     public BigDecimal calculateValue(Bike bike, LocalDate date) {
         System.out.println("I was here.............................");
         DateRange dates = new DateRange(bike.getManufactureDate(), date);

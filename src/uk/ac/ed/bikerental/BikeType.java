@@ -8,20 +8,39 @@ public class BikeType {
     private BigDecimal replacementValue;
     private BigDecimal depreciationRate;
 
+    
+    /** 
+     * @param s
+     * @param replacementValue
+     * @param depreciationRate
+     * @return 
+     */
     public BikeType(String s, BigDecimal replacementValue, BigDecimal depreciationRate) {
         this.name = s;
         this.replacementValue = replacementValue;
         this.depreciationRate = depreciationRate;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getName() {
         return this.name;
     }
 
+    
+    /** 
+     * @return BigDecimal
+     */
     public BigDecimal getReplacementValue() {
         return this.replacementValue;
     }
 
+    
+    /** 
+     * @return BigDecimal
+     */
     public BigDecimal getDepreciationRate() {
         return this.depreciationRate;
     }

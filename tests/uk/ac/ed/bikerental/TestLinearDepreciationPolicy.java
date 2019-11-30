@@ -13,6 +13,10 @@ class TestLinearDepreciationPolicy {
     private BikeType type1,type2;
     private LocalDate date1,date2,date3;
 
+    
+    /** 
+     * @throws Exception
+     */
     @BeforeEach
     void setUp() throws Exception {
         // Setup resources before each test

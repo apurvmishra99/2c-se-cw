@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 public class ValuationPolicyTest {
+    
+    /** 
+     * @throws Exception
+     */
     // You can add attributes here
 
     @BeforeEach

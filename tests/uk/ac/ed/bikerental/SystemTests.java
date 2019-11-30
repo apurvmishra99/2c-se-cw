@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,6 +74,11 @@ public class SystemTests {
     Booking l2;
     Booking l3;
 
+    // BOOKING IDS
+    UUID id1;
+    UUID id2;
+    UUID id3;
+
     // EXPECTED QUOTES
     Set<Quote> expectedQuotes;
 
@@ -80,6 +86,10 @@ public class SystemTests {
     Location loc;
     HashMap<BikeType, Integer> bikesRequested;
 
+    
+    /** 
+     * @throws Exception
+     */
     @BeforeEach
     void setUp() throws Exception {
         // Mock delivery
@@ -202,42 +212,36 @@ public class SystemTests {
         Invoice expectedInvoice = new Invoice(selectedQuote);
 
         assertEquals(actualBooking, expectedInvoice);
-    //     assertEquals(booking.getShop().getName(), "Shop1");
+    }
 
-    //     assertEquals(booking.getDeposit(), 20.0);
-    //     assertEquals(booking.getTotalPrice(), 35.0);
+    @Test
+    public void returningBikes() {
+        
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+        PickupMethod method = PickupMethod.DELIVERY;
+        
+        // Bikes user rented:
+        Collection<Bike> expectedBikes1 = new HashSet<Bike>();
+        expectedBikes1.add(b1);
+        expectedBikes1.add(b3);
+    
+        // Quote which was selected by the customer
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1, expectedBikes1);
+        
+        // Invoice which was generated
+        Invoice actualBooking = controller.bookQuote(selectedQuote, method);
+        
+        // Creating a booking object
+        l1 = new Booking(actualBooking);
+        id1 = l1.getId();
+        
+        // Returning the booking
+        controller.returnBooking(id1);
 
-    //     assertEquals(booking.getBikes().get(0).getType().getTypeName(), "Mountain Bike");
-    //     assertEquals(booking.getBikes().get(1).getType().getTypeName(), "Road Bike");
-
-    //     // Checking if the status of the bikes has been changed or not
-    //     assertEquals(booking.getBikes().get(0).isStatus(), BikeStatus.RESERVED);
-    //     assertEquals(booking.getBikes().get(1).isStatus(), BikeStatus.RESERVED);
-
-    //     assertEquals((booking.getOrderNumber() + 3), (noOfReservations + 1));
-    //     // +3 as we already have 3 reservations from before to test our getQuotes()
-    //     // function
-
-    //     DeliveryServiceFactory.setupMockDeliveryService();
-    //     MockDeliveryService deliveryService = (MockDeliveryService) DeliveryServiceFactory.getDeliveryService();
-    //     Collection<Deliverable> deliverables = deliveryService.getPickupsOn(booking.getDateRange().getStart());
-
-    //     for (Deliverable deliverable : deliverables) {
-
-    //     }
-    // }
-
-    // @Test
-    // public void returningBikes() {
-    //     BikeRentalShop partnerBrs = brs1;
-    //     ms.returnBikes(booking.getOrderNumber(), partnerBrs);
-
-    //     if (booking.getShop().getName().equals(partnerBrs.getName())) {
-    //         for (Bike bike : booking.getBikes())
-    //             assertEquals(bike.isStatus(), BikeStatus.AVAILABLE);
-    //     } else {
-    //         for (Bike bike : booking.getBikes())
-    //             assertEquals(bike.isStatus(), BikeStatus.PARTNER_TO_ORIGPROVIDER);
-    //     }
+        for (Bike b : l1.getBikes()) {
+            assertEquals(b.getStatus(), BikeStatus.AVAILABLE);
+        }
     }
 }
+

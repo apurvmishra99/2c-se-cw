@@ -3,6 +3,10 @@ package uk.ac.ed.bikerental;
 public class DeliveryServiceFactory {
     private static DeliveryService deliveryServiceInstance;
 
+    
+    /** 
+     * @return DeliveryService
+     */
     public static DeliveryService getDeliveryService() {
         if (deliveryServiceInstance == null) {
             // Not implemented -- we are only interested in testing using the Mock.

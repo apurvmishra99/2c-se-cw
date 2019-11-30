@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 class DateRangeTest {
     private DateRange dateRange1, dateRange2, dateRange3;
 
+    
+    /** 
+     * @throws Exception
+     */
     @BeforeEach
     void setUp() throws Exception {
         // Setup resources before each test
