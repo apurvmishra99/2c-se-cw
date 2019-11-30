@@ -56,9 +56,16 @@ public class Shop {
     public BigDecimal generateDeposit(Collection<Bike> bikeList, LocalDate startDate) {
         BigDecimal ret = new BigDecimal(0);
         for (Bike b : bikeList) {
-            ret.add(valuationPolicy.calculateValue(b,startDate));
+            BigDecimal calc = valuationPolicy.calculateValue(b,startDate);
+            System.out.println("Calc value .............." + calc);
+            ret = ret.add(calc);
         }
-        return ret.multiply(this.depositRate);
+        System.out.println("Ret........................"+ ret);
+        System.out.println("Dep rate...................." + this.depositRate);
+        BigDecimal res = ret.multiply(this.depositRate);
+        System.out.println("Res........................."+ res);
+        return res;
+        
     }
 
     public Collection<Bike> getBikes(DateRange dates, Map<BikeType, Integer> bikes) {

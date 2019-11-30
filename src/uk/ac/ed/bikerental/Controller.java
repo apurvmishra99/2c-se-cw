@@ -29,8 +29,8 @@ public class Controller {
             }
             Collection<Bike> bikeList = s.getBikes(dates, bikes);
             if(bikeList != null) {
-                BigDecimal price = s.getPricingPolicy().calculatePrice(bikeList, dates);
-                BigDecimal deposit = s.generateDeposit(bikeList, dates.getStart());
+                BigDecimal price = s.getPricingPolicy().calculatePrice(bikeList, dates).setScale(0, BigDecimal.ROUND_HALF_UP);
+                BigDecimal deposit = s.generateDeposit(bikeList, dates.getStart()).setScale(0, BigDecimal.ROUND_HALF_UP);
                 Quote q = new Quote(price, deposit, dates, location, s, bikeList);
                 ret.add(q);
             }

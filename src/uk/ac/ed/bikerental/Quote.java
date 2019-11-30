@@ -90,12 +90,12 @@ public class Quote {
             return false;
         }
         Quote quote = (Quote) o;
-        return Objects.equals(id, quote.id) && Objects.equals(price, quote.price) && Objects.equals(deposit, quote.deposit) && Objects.equals(dates, quote.dates) && Objects.equals(loc, quote.loc) && Objects.equals(shop, quote.shop) && Objects.equals(bikeList, quote.bikeList);
+        return (this.dates.equals(quote.dates) && this.deposit.equals(quote.deposit) && this.price.equals(quote.price) && this.bikeList.size() == quote.bikeList.size()); 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, deposit, dates, loc, shop, bikeList);
+        return Objects.hash(price, deposit, dates, loc);
     }
 
     @Override

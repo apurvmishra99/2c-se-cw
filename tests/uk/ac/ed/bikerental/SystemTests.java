@@ -1,7 +1,5 @@
 package uk.ac.ed.bikerental;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -10,6 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -155,7 +154,6 @@ public class SystemTests {
         // s5.addPartner(s4);
     }
 
-    // TODO: Write system tests covering the three main use cases
     @Test
     void findingAQuote() {
 
@@ -172,60 +170,38 @@ public class SystemTests {
         Collection<Bike> expectedBikes2 = new HashSet<Bike>();
         expectedBikes2.add(b7);
         expectedBikes2.add(b9);
-        Quote q2 = new Quote(new BigDecimal(80), new BigDecimal(300), dateRange1, customerLocation, s1, expectedBikes1);
+        Quote q2 = new Quote(new BigDecimal(80), new BigDecimal(200), dateRange1, customerLocation, s1, expectedBikes1);
 
         Collection<Quote> expectedQuotes = new HashSet<Quote>();
         expectedQuotes.add(q1);
         expectedQuotes.add(q2);
-
-        Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);
-        // System.out.println(actualQuotes);
-        assertEquals(expectedQuotes, actualQuotes);
+        
         // Call method Quote()
+        Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);
+        assertEquals(expectedQuotes, actualQuotes);
+    }
+    @Test
+    void bookingAQuote() {
 
+        
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+        PickupMethod method = PickupMethod.DELIVERY;
+        // Expected object:
+        Collection<Bike> expectedBikes1 = new HashSet<Bike>();
+        expectedBikes1.add(b1);
+        expectedBikes1.add(b3);
+    
+        // Quote selected by the customer
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, s1, expectedBikes1);
+        
+        // Calling bookQuote()
+        Invoice actualBooking = controller.bookQuote(selectedQuote, method);
+        
+        // Expected Invoice()
+        Invoice expectedInvoice = new Invoice(selectedQuote);
 
-
-
-
-    //     ms.setDepreciationMethod("DDBD");
-    //     actualQuotes = ms.createCustomer("Dan", "Wilks", l_customer, "999999999", bikesReq, dateRange3, "Delivery");
-
-    //     int numQuotes = actualQuotes.size();
-
-    //     assertEquals(numQuotes, 2);// CHECKING IF 2 QUOTES HAVE BEEN RETURNED
-
-    //     java.util.Iterator<Quote> quote = actualQuotes.iterator();
-    //     for (int i = 0; i < numQuotes; ++i) {
-    //         Quote actualQ = quote.next();
-
-    //         if (actualQ.getBrs().getName() == "Shop1") {
-    //             assertEquals(actualQ.getBikes().get(0).getType().getTypeName(), "Mountain Bike");
-    //             assertEquals(actualQ.getBikes().get(1).getType().getTypeName(), "Road Bike");
-
-    //             assertEquals(actualQ.getTotalPrice(), new BigDecimal(35));
-    //             assertEquals(actualQ.getDeposit().setScale(2, RoundingMode.CEILING), new BigDecimal("184.32"));
-    //         } else if (actualQ.getBrs().getName() == "Shop5") {
-    //             assertEquals(actualQ.getBikes().get(0).getType().getTypeName(), "Mountain Bike");
-    //             assertEquals(actualQ.getBikes().get(1).getType().getTypeName(), "Road Bike");
-
-    //             assertEquals(actualQ.getTotalPrice(), new BigDecimal(35));
-    //             assertEquals(actualQ.getDeposit().setScale(2, RoundingMode.CEILING), new BigDecimal("184.32"));
-    //         } else
-    //             assert (false);// WRONG QUOTE
-    //     }
-    // }
-
-    // @Test
-    // void bookingAQuote() {
-
-    //     // actualQuotes = ms.createCustomer("Dan", "Wilks", l_customer, "999999999",
-    //     // bikesReq, dateRange3, "Delivery");
-
-    //     // Quote selected by the customer
-    //     Quote selectedQuote = new Quote(brs1, dateRange3, bikes1, new BigDecimal(35), new BigDecimal(20));
-
-    //     booking = ms.makeBooking(selectedQuote);
-
+        assertEquals(actualBooking, expectedInvoice);
     //     assertEquals(booking.getShop().getName(), "Shop1");
 
     //     assertEquals(booking.getDeposit(), 20.0);

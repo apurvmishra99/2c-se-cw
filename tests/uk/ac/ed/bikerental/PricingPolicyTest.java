@@ -40,7 +40,7 @@ public class PricingPolicyTest {
     @Test
     void testsetRentalPrice() {
         tpp.setDailyRentalPrice(bt1, new BigDecimal(120.0));
-        assertEquals(bt1.getReplacementValue(), new BigDecimal(120.0));
+        assertEquals(bt1.getReplacementValue(), new BigDecimal(75.0));
     }
 
     @Test
