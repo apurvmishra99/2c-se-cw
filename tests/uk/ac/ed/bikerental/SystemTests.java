@@ -35,9 +35,10 @@ public class SystemTests {
     Location customerLocation;
     Location locEH1;
     Location locEH2;
-    Location locCAG;
     Location locEH3;
     Location locEH4;
+    Location locCAG;
+    Location locDEL;
 
     // System controller
     Controller controller;
@@ -120,9 +121,10 @@ public class SystemTests {
         customerLocation = new Location("EH8 8KK", "100111 Informatics Forum");
         locEH1 = new Location("EH7 4EG", "38 Haddington Place");
         locEH2 = new Location("EH3 9LW", "15 Leven Terrace");
-        locCAG = new Location("CA3 1LW", "Cagliariiii");
         locEH3 = new Location("eh1 1jh", "Somewhere in Edi");
         locEH4 = new Location("eh4 5th", "30 Collegiate, Edinburgh");
+        locCAG = new Location("CA3 1LW", "Cagliariiii");
+        locDEL = new Location("DL0 5AM", "New Delhiii");
 
         controller = new Controller();
 
@@ -232,9 +234,7 @@ public class SystemTests {
     }
 
     /**
-     * Tries to find quotes;
-     * Normal action, no edge cases;
-     * Covers location as a shop (3) has bikes available but not closeby
+     * Tries to find quotes when none is available;
      * @asserts Quotes is empty
      */
     @Test
@@ -243,13 +243,58 @@ public class SystemTests {
         Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
         requestedBikes.put(bikeType1, 5);
 
+        Collection<Quote> expectedQuotes = new HashSet<Quote>();
+
+        // Call method Quote()
+        Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);
+        assertEquals(expectedQuotes, actualQuotes);
+    }
+
+    /**
+     * Tries to find quotes when the user location doesnt match any shop;
+     * @asserts Quotes is empty
+     */
+    @Test
+    void findingAQuote_userIsFar() {
+        // User requires 2xType1
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+
+        Collection<Quote> expectedQuotes = new HashSet<Quote>();
+
+        // Call method Quote()
+        Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, locDEL);
+        assertEquals(expectedQuotes, actualQuotes);
+    }
+
+    /**
+     * Tries to find after it's just been booked;
+     * Note, two quotes are returned normally,
+     * so after one is booked only one is returned
+     * @asserts Quotes is empty
+     */
+    @Test
+    void findingAQuote_alreadyBooked() {
+        // Requested bikes
+        Map<BikeType, Integer> requestedBikes = new HashMap<BikeType, Integer>();
+        requestedBikes.put(bikeType1, 2);
+        PickupMethod method = PickupMethod.PICKUP;
+
         // Expected object:
         Collection<Bike> expectedBikeshop1 = new HashSet<Bike>();
         expectedBikeshop1.add(bike1);
         expectedBikeshop1.add(bike3);
-        Quote q1 = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
+
+        // Quote selected by the customer
+        Quote selectedQuote = new Quote(new BigDecimal(20), new BigDecimal(400), dateRange1, customerLocation, shop1,
                 expectedBikeshop1);
 
+        // Calling bookQuote()
+        controller.bookQuote(selectedQuote, method);
+
+        // Quote is now booked, shouldn't be available anymore
+
+        // Expected object: only contains one quote instead of two
         Collection<Bike> expectedBikeshop2 = new HashSet<Bike>();
         expectedBikeshop2.add(bike7);
         expectedBikeshop2.add(bike9);
@@ -257,6 +302,7 @@ public class SystemTests {
                 expectedBikeshop1);
 
         Collection<Quote> expectedQuotes = new HashSet<Quote>();
+        expectedQuotes.add(q2);
 
         // Call method Quote()
         Collection<Quote> actualQuotes = controller.getQuotes(requestedBikes, dateRange1, customerLocation);
