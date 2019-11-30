@@ -15,9 +15,7 @@ import org.junit.jupiter.api.Test;
 
 public class SystemTests {
     Set<Shop> providers = new HashSet<>();
-    // Customer cr1 = new Customer("ABCD", "XYZ");
-    // Customer cr2 = new Customer("1234", "890");
-
+    
     // BIKE RENTAL SHOPS
     Shop s1;
     Shop s2;

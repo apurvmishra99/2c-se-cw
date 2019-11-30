@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.*;
 
 public class PricingPolicyTest {
-    // You can add attributes here
+
     MultidayPricingPolicy tpp;
     Shop s1;
     BikeType bt1;
@@ -28,9 +28,9 @@ public class PricingPolicyTest {
     @BeforeEach
     void setUp() throws Exception {
         tpp = new MultidayPricingPolicy();
-        bt1 = new BikeType("Mountain", new BigDecimal(75), new BigDecimal(85));
+        bt1 = new BikeType("Mountain", new BigDecimal(75), new BigDecimal(0.1));
         b1 = new Bike(bt1, s1);
-        bt2 = new BikeType("Commercial", new BigDecimal(85), new BigDecimal(85));
+        bt2 = new BikeType("Commercial", new BigDecimal(100), new BigDecimal(0.25));
         b2 = new Bike(bt2, s1);
         this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 8), LocalDate.of(2019, 1, 10));
         this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 7), LocalDate.of(2019, 1, 10));
@@ -63,8 +63,8 @@ public class PricingPolicyTest {
         BigDecimal bgg = tpp.calculatePrice(arr, dateRange2);
         BigDecimal dis = new BigDecimal(0.05);
         BigDecimal one = new BigDecimal(1.0);
-        BigDecimal rent1 = b1.getType().getReplacementValue();
-        BigDecimal rent2 = b2.getType().getReplacementValue();
+        BigDecimal rent1 = tpp.getDailyPrice(b1.getType());
+        BigDecimal rent2 = tpp.getDailyPrice(b2.getType());
         BigDecimal range = new BigDecimal(dateRange2.toDays());
         BigDecimal sum1 = rent1.multiply(range);
         BigDecimal sum2 = rent2.multiply(range);

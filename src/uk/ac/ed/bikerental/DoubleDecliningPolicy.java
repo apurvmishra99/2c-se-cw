@@ -11,7 +11,7 @@ public class DoubleDecliningPolicy implements ValuationPolicy {
      * @return BigDecimal
      */
     public BigDecimal calculateValue(Bike bike, LocalDate date) {
-        DateRange dates = new DateRange(bike.getManufactureDate(),date);	
+        DateRange dates = new DateRange(bike.getManufactureDate(), date);	
 
         int age = (int) dates.toYears();
         BikeType type = bike.getType();
